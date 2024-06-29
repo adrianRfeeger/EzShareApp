@@ -43,11 +43,6 @@ This program downloads files from an EzShare SD card used in CPAP devices like t
    ```
 
 2. **Using the GUI:**
-
-   When you launch the program, the graphical user interface (GUI) will appear, as shown below:
-
-   ![GUI Screenshot](./path/to/your/image.png)
-
    - **Path**: Specify the local directory where the files will be downloaded. You can use the "Browse" button to select the directory.
    - **URL**: Enter the URL of the EzShare SD card. This is typically something like `http://192.168.4.1/dir?dir=A:`.
    - **WiFi SSID**: Enter the SSID of the EzShare SD card's Wi-Fi network. The default SSID is `ez Share`.
