@@ -1,0 +1,264 @@
+from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QProgressBar, QFileDialog, QMessageBox
+from PyQt6.QtGui import QIcon
+from PyQt6.QtCore import Qt, QThread, pyqtSignal
+import configparser
+import os
+import sys
+from ezshare import EZShare
+from wifi import connect_to_wifi, disconnect_from_wifi
+
+def resource_path(relative_path):
+    """ Get the absolute path to a resource, works for dev and for PyInstaller """
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
+
+class EzShareWorker(QThread):
+    progress = pyqtSignal(int)
+    status = pyqtSignal(str)
+    finished = pyqtSignal()
+
+    def __init__(self, ezshare):
+        super().__init__()
+        self.ezshare = ezshare
+        self._is_running = True
+
+    def run(self):
+        self.ezshare.set_progress_callback(self.update_progress)
+        self.ezshare.set_status_callback(self.update_status)
+        try:
+            connect_to_wifi(self.ezshare)  # Connect to Wi-Fi before starting the process
+            self.ezshare.run()
+        except RuntimeError as e:
+            self.update_status(f'Error: {e}')
+        finally:
+            disconnect_from_wifi(self.ezshare)  # Disconnect from Wi-Fi after the process completes
+            self.finished.emit()
+
+    def update_progress(self, value):
+        self.progress.emit(value)
+
+    def update_status(self, message):
+        self.status.emit(message)
+
+    def stop(self):
+        self._is_running = False
+        disconnect_from_wifi(self.ezshare)  # Ensure Wi-Fi is disconnected when stopping
+        self.ezshare.disconnect_from_wifi()
+        self.wait()  # Ensure the thread finishes properly
+
+class EzShareApp(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.config_file = resource_path('config.ini')
+        self.default_config = self.load_default_config()
+        self.config = configparser.ConfigParser()
+        self.load_config()
+        self.ezshare = EZShare()
+        self.worker = None
+        self.initUI()
+
+    def initUI(self):
+        self.setWindowTitle('EzShare')
+        self.setWindowIcon(QIcon(resource_path('icon.icns')))  # Set the window icon
+
+        central_widget = QWidget()
+        self.setCentralWidget(central_widget)
+
+        layout = QVBoxLayout()
+
+        # Path
+        path_layout = QHBoxLayout()
+        self.path_label = QLabel('Path:')
+        self.path_entry = QLineEdit(self.config['Settings']['path'])
+        self.path_browse_btn = QPushButton('Browse')
+        self.path_browse_btn.clicked.connect(self.browse_path)
+        path_layout.addWidget(self.path_label)
+        path_layout.addWidget(self.path_entry)
+        path_layout.addWidget(self.path_browse_btn)
+
+        # URL
+        url_layout = QHBoxLayout()
+        self.url_label = QLabel('URL:')
+        self.url_entry = QLineEdit(self.config['Settings']['url'])
+        url_layout.addWidget(self.url_label)
+        url_layout.addWidget(self.url_entry)
+
+        # WiFi SSID
+        ssid_layout = QHBoxLayout()
+        self.ssid_label = QLabel('WiFi SSID:')
+        self.ssid_entry = QLineEdit(self.config['WiFi']['ssid'])
+        ssid_layout.addWidget(self.ssid_label)
+        ssid_layout.addWidget(self.ssid_entry)
+
+        # WiFi PSK
+        psk_layout = QHBoxLayout()
+        self.psk_label = QLabel('WiFi PSK:')
+        self.psk_entry = QLineEdit(self.config['WiFi']['psk'])
+        self.psk_entry.setEchoMode(QLineEdit.EchoMode.Password)
+        psk_layout.addWidget(self.psk_label)
+        psk_layout.addWidget(self.psk_entry)
+
+        # Buttons
+        btn_layout = QHBoxLayout()
+        self.start_btn = QPushButton('Start')
+        self.start_btn.clicked.connect(self.start_process)
+        self.save_btn = QPushButton('Save Settings')
+        self.save_btn.clicked.connect(self.save_config)
+        self.default_btn = QPushButton('Restore Defaults')
+        self.default_btn.clicked.connect(self.restore_defaults)
+        self.cancel_btn = QPushButton('Cancel')
+        self.cancel_btn.clicked.connect(self.cancel_process)
+        btn_layout.addWidget(self.start_btn)
+        btn_layout.addWidget(self.save_btn)
+        btn_layout.addWidget(self.default_btn)
+        btn_layout.addWidget(self.cancel_btn)
+
+        # Progress bar
+        self.progress_bar = QProgressBar()
+        self.progress_bar.setValue(0)
+        self.progress_bar.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        # Status label
+        self.status_label = QLabel()
+        self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        layout.addLayout(path_layout)
+        layout.addLayout(url_layout)
+        layout.addLayout(ssid_layout)
+        layout.addLayout(psk_layout)
+        layout.addLayout(btn_layout)
+        layout.addWidget(self.progress_bar)
+        layout.addWidget(self.status_label)
+
+        central_widget.setLayout(layout)
+
+    def load_default_config(self):
+        default_config = configparser.ConfigParser()
+        default_config['Settings'] = {
+            'path': '~/Documents/CPAP_Data/SD_card',
+            'url': 'http://192.168.4.1/dir?dir=A:',
+            'start_time': '',
+            'show_progress': 'true',
+            'verbose': 'true',
+            'overwrite': 'false',
+            'keep_old': 'false',
+            'ignore': '',
+            'retries': '3',
+            'connection_delay': '5',
+            'debug': 'true'
+        }
+        default_config['WiFi'] = {
+            'ssid': 'ez Share',
+            'psk': '88888888'
+        }
+        return default_config
+
+    def load_config(self):
+        if not os.path.exists(self.config_file):
+            with open(self.config_file, 'w') as configfile:
+                self.default_config.write(configfile)
+        self.config.read(self.config_file)
+
+    def save_config(self):
+        self.config['Settings']['path'] = self.path_entry.text()
+        self.config['Settings']['url'] = self.url_entry.text()
+        self.config['WiFi']['ssid'] = self.ssid_entry.text()
+        self.config['WiFi']['psk'] = self.psk_entry.text()
+        with open(self.config_file, 'w') as configfile:
+            self.config.write(configfile)
+        QMessageBox.information(self, 'Settings Saved', 'Settings have been saved successfully.')
+
+    def restore_defaults(self):
+        self.config = self.default_config
+        self.path_entry.setText(self.config['Settings']['path'])
+        self.url_entry.setText(self.config['Settings']['url'])
+        self.ssid_entry.setText(self.config['WiFi']['ssid'])
+        self.psk_entry.setText(self.config['WiFi']['psk'])
+        QMessageBox.information(self, 'Defaults Restored', 'Settings have been restored to defaults.')
+
+    def browse_path(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.Option.ShowDirsOnly
+        directory = QFileDialog.getExistingDirectory(self, "Select Directory", options=options)
+        if directory:
+            self.path_entry.setText(directory)
+
+    def start_process(self):
+        path = self.path_entry.text()
+        url = self.url_entry.text()
+        ssid = self.ssid_entry.text()
+        psk = self.psk_entry.text()
+
+        if not path or not url or not ssid:
+            QMessageBox.warning(self, 'Input Error', 'All fields must be filled out.')
+            return
+
+        self.config['Settings']['path'] = path
+        self.config['Settings']['url'] = url
+        self.config['WiFi']['ssid'] = ssid
+        self.config['WiFi']['psk'] = psk
+
+        self.ezshare.set_params(
+            path=path,
+            url=url,
+            start_time=None,
+            show_progress=True,
+            verbose=True,
+            overwrite=False,
+            keep_old=False,
+            ssid=ssid,
+            psk=psk,
+            ignore=[],
+            retries=3,
+            connection_delay=5,
+            debug=True
+        )
+
+        if self.worker is not None and self.worker.isRunning():
+            self.worker.stop()
+            self.worker.wait()
+
+        self.worker = EzShareWorker(self.ezshare)
+        self.worker.progress.connect(self.update_progress)
+        self.worker.status.connect(self.update_status)
+        self.worker.finished.connect(self.process_finished)
+        self.worker.start()
+
+    def update_progress(self, value):
+        self.progress_bar.setValue(value)
+
+    def update_status(self, message):
+        self.status_label.setText(message)
+        if 'Error' in message:
+            QMessageBox.critical(self, 'Error', message)
+
+    def process_finished(self):
+        QMessageBox.information(self, 'Process Completed', 'The process has completed successfully.')
+        self.progress_bar.setValue(100)
+        self.status_label.setText('Process completed.')
+        # Reset progress bar after showing completion status
+        self.progress_bar.setValue(0)
+        self.status_label.setText('Ready.')
+
+    def cancel_process(self):
+        if self.worker and self.worker.isRunning():
+            self.worker.stop()
+            self.worker.wait()
+            self.progress_bar.setValue(0)
+            self.status_label.setText('Process cancelled.')
+            QMessageBox.information(self, 'Process Cancelled', 'The process has been cancelled.')
+
+    def closeEvent(self, event):
+        if self.worker and self.worker.isRunning():
+            self.worker.stop()
+            self.worker.wait()
+        event.accept()
+
+if __name__ == "__main__":
+    import sys
+    from PyQt6.QtWidgets import QApplication
+
+    app = QApplication(sys.argv)
+    ex = EzShareApp()
+    ex.show()
+    sys.exit(app.exec())
