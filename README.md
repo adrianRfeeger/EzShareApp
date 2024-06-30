@@ -3,11 +3,11 @@
 
 ## Overview
 
-EzShareCPAP is a macOS program designed to download files from an EzShare SD card/adapter when used in CPAP devices (such as the ResMed AirSense 10 Elite) to a local directory. These files can then be imported with applications such as [OSCAR](https://www.sleepfiles.com/OSCAR/) and [SleepHQ](https://home.sleephq.com/) for data analysis and visualisation.
+EzShareCPAP is a macOS program designed to download files from an [ez Share SD card/adapter](https://www.youtube.com/watch?v=ANz8pNDHAPo) when used in CPAP devices (such as the ResMed AirSense 10 Elite) to a local directory. These files can then be imported with applications such as [OSCAR](https://www.sleepfiles.com/OSCAR/) and [SleepHQ](https://home.sleephq.com/) for data analysis and visualisation.
 
 ## Features
 
-- **Wi-Fi Connectivity:** Connects to the EzShare SD card's Wi-Fi network.
+- **Wi-Fi Connectivity:** Connects to the ez Share SD card's Wi-Fi network.
 - **File Synchronisation:** Downloads files from the SD card to a specified local directory.
 - **User Interface:** Provides a graphical user interface (GUI) for ease of use.
 - **Configuration:** Handles configuration settings directly through the GUI.
@@ -75,14 +75,14 @@ EzShareCPAP is a macOS program designed to download files from an EzShare SD car
 ### Using the GUI:
 
 - **Path:** Specify the local directory for downloading files. Use the "Browse" button to select the directory.
-- **URL:** Enter the URL of the EzShare SD card, typically `http://192.168.4.1/dir?dir=A:`.
+- **URL:** Enter the URL of the ez Share SD card, typically `http://192.168.4.1/dir?dir=A:`.
 - **WiFi SSID:** Enter the SSID of the EzShare SD card's Wi-Fi network. The default SSID is `ez Share`.
 - **WiFi PSK:** Enter the pre-shared key (PSK) for the Wi-Fi network. The default PSK is `88888888`.
 
 **Buttons:**
 - **Start:** Initiates the synchronisation process.
 - **Save Settings:** Saves the current settings to `config.ini`.
-- **Restore Defaults:** Restores the default EzShare Wi-Fi settings.
+- **Restore Defaults:** Restores the default ez Share Wi-Fi settings.
 - **Cancel:** Cancels the current operation.
 
 **Progress Bar:** Displays the progress of the file synchronisation process.
