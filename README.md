@@ -24,14 +24,14 @@ EzShareCPAP is a macOS program designed to download files from an EzShare SD car
 ### From Source
 
 1. **Clone the repository:**
-```
+   ```
    git clone https://github.com/adrianrfeeger/EzShareCPAP.git
    cd EzShareCPAP
-```
+   ```
 2. **Install the required packages:**
-```
+   ```
    pip install -r requirements.txt
-```
+   ```
 ### From Release Version
 
 1. **Download the release version:**
@@ -48,9 +48,9 @@ EzShareCPAP is a macOS program designed to download files from an EzShare SD car
 
 1. **Run the program:**
 
-   \```bash
+   ```bash
    python main.py
-   \```
+   ```
 
 2. **Using the GUI:**
 
