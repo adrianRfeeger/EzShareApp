@@ -1,4 +1,4 @@
-# EzShare CPAP
+# EzShareCPAP
 <img width="548" alt="image" src="https://github.com/adrianRfeeger/EzShareApp/assets/139186297/e637f9d9-d880-4989-be33-c0831fe0ace9">
 
 ## Overview
