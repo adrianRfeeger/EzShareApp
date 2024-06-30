@@ -4,7 +4,7 @@
 
 ## Overview
 
-EzShareCPAP is a macOS program designed to download files from an EzShare SD card when used in CPAP devices (such as the ResMed AirSense 10 Elite) to a local directory. These files can then be utilized with applications such as [OSCAR](https://www.sleepfiles.com/OSCAR/) and [SleepHQ](https://home.sleephq.com/) for data analysis and visualization.
+EzShareCPAP is a macOS program designed to download files from an ez Share SD card when used in CPAP devices (such as the ResMed AirSense 10 Elite) to a local directory. These files can then be utilized with applications such as [OSCAR](https://www.sleepfiles.com/OSCAR/) and [SleepHQ](https://home.sleephq.com/) for data analysis and visualization.
 
 ## Features
 
