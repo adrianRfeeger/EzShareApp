@@ -24,8 +24,8 @@ This program downloads files from an EzShare SD card used in CPAP devices like t
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/yourusername/ezshare-cpap-downloader.git
-   cd ezshare-cpap-downloader
+   git clone https://github.com/adrianrfeeger/ezshareapp.git
+   cd ezshareapp
    ```
 
 2. **Install the required packages:**
