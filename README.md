@@ -59,13 +59,12 @@ This program downloads files from an EzShare SD card used in CPAP devices like t
    The GUI handles the configuration settings directly, so you don't need to manually edit the `config.ini` file. Simply enter your settings in the GUI and click "Save Settings" to store them.
 
 ## File Structure
-
-- `config.ini`: Configuration file for storing Wi-Fi credentials and paths.
-- `ezshare.py`: Main functionality for managing Wi-Fi connection and file synchronization.
-- `file_ops.py`: Handles file operations such as directory traversal and file downloading.
-- `gui.py`: Graphical user interface for the program, which also handles configuration settings.
 - `main.py`: Entry point for the program.
+- `gui.py`: Graphical user interface for the program, which also handles configuration settings.
+- `ezshare.py`: Main functionality for managing Wi-Fi connection and file synchronization.
 - `wifi.py`: Manages Wi-Fi connections specific to macOS.
+- `file_ops.py`: Handles file operations such as directory traversal and file downloading.=
+- `config.ini`: Configuration file for storing Wi-Fi credentials and paths.
 
 ## Troubleshooting
 
