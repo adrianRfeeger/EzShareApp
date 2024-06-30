@@ -111,7 +111,7 @@ The GUI manages the configuration settings directly, eliminating the need to man
 ### Wi-Fi Connection Issues:
 
 - Verify the SSID and PSK in the GUI are correct. Default SSID is `ez Share`, and the default PSK is `88888888`.
-- Ensure the EzShare SD card/adapter is inserted into a powered-on device (e.g., CPAP) and within range of your computer (5-10 metres).
+- Ensure the ez Share SD card/adapter is inserted into a powered-on device (e.g., CPAP) and within range of your computer (5-10 metres).
 
 ### File Download Issues:
 
