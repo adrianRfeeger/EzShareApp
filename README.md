@@ -1,5 +1,5 @@
-
 # EzShareCPAP
+<img width="548" alt="image" src="https://github.com/adrianRfeeger/EzShareCPAP/assets/139186297/9fb9eab7-687e-4f0c-abcc-f1952d01006f">
 
 ## Overview
 
@@ -24,18 +24,14 @@ EzShareCPAP is a macOS program designed to download files from an EzShare SD car
 ### From Source
 
 1. **Clone the repository:**
-
-   \```bash
+```
    git clone https://github.com/adrianrfeeger/EzShareCPAP.git
    cd EzShareCPAP
-   \```
-
+```
 2. **Install the required packages:**
-
-   \```bash
+```
    pip install -r requirements.txt
-   \```
-
+```
 ### From Release Version
 
 1. **Download the release version:**
@@ -108,10 +104,10 @@ EzShareCPAP is a macOS program designed to download files from an EzShare SD car
 
 ## Troubleshooting
 
-- **Wi-Fi Connection Issues:**
+**Wi-Fi Connection Issues:**
   - Verify the SSID and PSK in the GUI are correct. Default SSID is `ez Share`, and the default PSK is `88888888`.
   - Ensure the EzShare SD card is powered on and within range.
 
-- **File Download Issues:**
+ **File Download Issues:**
   - Confirm the URL in the GUI points to the correct EzShare SD card address.
   - Ensure sufficient space is available in the local directory for file downloads.
