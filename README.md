@@ -8,7 +8,7 @@ EzShareCPAP is a macOS program designed to download files from an [ez Share SD c
 
 ## Features
 
-- **Wi-Fi Connectivity:** Connects to the EzShare SD card's Wi-Fi network.
+- **Wi-Fi Connectivity:** Connects to the ez Share SD card's Wi-Fi network.
 - **File Synchronisation:** Downloads files from the SD card to a specified local directory.
 - **User Interface:** Provides a graphical user interface (GUI) for ease of use.
 - **Configuration:** Handles configuration settings directly through the GUI.
