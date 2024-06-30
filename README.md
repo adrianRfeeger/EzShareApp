@@ -44,39 +44,21 @@ EzShareCPAP is a macOS program designed to download files from an EzShare SD car
 
 ## Usage
 
+### Running from Release Version
+
+ **Run the standalone application:**
+
+   - Navigate to where you put EzShareCPAP.app and double-click it.
+
 ### Running from Source
 
-1. **Run the program:**
+ **Run the program:**
 
    ```
    python main.py
    ```
 
-2. **Using the GUI:**
-
-   - **Path:** Specify the local directory for downloading files. Use the "Browse" button to select the directory.
-   - **URL:** Enter the URL of the EzShare SD card, typically `http://192.168.4.1/dir?dir=A:`.
-   - **WiFi SSID:** Enter the SSID of the EzShare SD card's Wi-Fi network. The default SSID is `ez Share`.
-   - **WiFi PSK:** Enter the pre-shared key (PSK) for the Wi-Fi network. The default PSK is `88888888`.
-
-   **Buttons:**
-   - **Start:** Initiates the synchronisation process.
-   - **Save Settings:** Saves the current settings to `config.ini`.
-   - **Restore Defaults:** Restores the default EzShare Wi-Fi settings.
-   - **Cancel:** Cancels the current operation.
-
-   **Progress Bar:** Displays the progress of the file synchronisation process.
-
-   The GUI manages the configuration settings directly, eliminating the need to manually edit the `config.ini` file. Enter your settings in the GUI and click "Save Settings" to store them.
-
-### Running from Release Version
-
-
-1. **Run the standalone application:**
-
-   - Navigate to where you put EzShareCPAP.app and double-click it.
-
-2. **Using the GUI:**
+ **Using the GUI:**
 
    - **Path:** Specify the local directory for downloading files. Use the "Browse" button to select the directory.
    - **URL:** Enter the URL of the EzShare SD card, typically `http://192.168.4.1/dir?dir=A:`.
