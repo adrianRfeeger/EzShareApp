@@ -1,5 +1,5 @@
 # EzShare CPAP
-<img width="548" alt="image" src="https://github.com/adrianRfeeger/EzShareApp/assets/139186297/53d70cd0-f5e6-4cef-8a80-ef06244aa36a">
+<img width="548" alt="image" src="https://github.com/adrianRfeeger/EzShareApp/assets/139186297/e637f9d9-d880-4989-be33-c0831fe0ace9">
 
 ## Overview
 
@@ -17,8 +17,8 @@ This program downloads files from an EzShare SD card used in CPAP devices like t
 
 - macOS operating system.
 - Python 3.x installed on your system.
-- Required Python packages: `requests`, `beautifulsoup4`, `PyQt6`.
-
+- Required Python packages: `requests`, `beautifulsoup4`, `PyQt6`
+  
 ## Installation
 
 1. **Clone the repository:**
