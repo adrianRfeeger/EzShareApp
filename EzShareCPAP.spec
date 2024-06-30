@@ -47,7 +47,7 @@ info_plist={
         'CFBundleName': 'EzShareCPAP',
         'CFBundleDisplayName': 'EzShareCPAP',
         'CFBundleGetInfoString': 'EzShareCPAP',
-        'CFBundleIdentifier': 'com.ezsharecpap',  # Replace with your bundle identifier
+        'CFBundleIdentifier': 'com.ezsharecpap',
         'CFBundleVersion': '1.0.1',
         'CFBundleShortVersionString': '1.0.1',
         'NSAppTransportSecurity': {
