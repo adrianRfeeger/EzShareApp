@@ -48,7 +48,7 @@ EzShareCPAP is a macOS program designed to download files from an EzShare SD car
 
    **Run the standalone application:**
 
-      - Navigate to where you put EzShareCPAP.app and double-click it.
+   - Navigate to where you put EzShareCPAP.app and double-click it.
 
 ### Running from Source
 
