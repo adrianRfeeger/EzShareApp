@@ -1,5 +1,6 @@
 # EzShareCPAP
-<img width="548" alt="image" src="https://github.com/adrianRfeeger/EzShareCPAP/assets/139186297/9fb9eab7-687e-4f0c-abcc-f1952d01006f"> <img width="150" alt="image" src="https://github.com/adrianRfeeger/EzShareCPAP/assets/139186297/9206f7a1-d8b4-42f4-8d39-4dba9afcd980">
+![image](https://github.com/adrianRfeeger/EzShareCPAP/assets/139186297/504a469e-bc13-493b-97c0-7581bf821032)
+
 
 ## Overview
 
