@@ -21,6 +21,16 @@ EzShareCPAP is a macOS program designed to download files from an EzShare SD car
 
 ## Installation
 
+### From Release Version
+
+1. **Download the release version:**
+
+   - Download the release version compiled by PyInstaller for ARM64 Macs from the [here](https://github.com/adrianRfeeger/EzShareCPAP/releases/download/v1.0.1/EzShareCPAP.zip).
+
+2. **Extract the ZIP file:**
+
+   - Unzip the downloaded file and move to a desired location on your macOS system (ie Applications folder).
+     
 ### From Source
 
 1. **Clone the repository:**
@@ -32,15 +42,6 @@ EzShareCPAP is a macOS program designed to download files from an EzShare SD car
    ```
    pip install -r requirements.txt
    ```
-### From Release Version
-
-1. **Download the release version:**
-
-   - Download the release version compiled by PyInstaller for ARM64 Macs from the [here](https://github.com/adrianRfeeger/EzShareCPAP/releases/download/v1.0.1/EzShareCPAP.zip).
-
-2. **Extract the ZIP file:**
-
-   - Unzip the downloaded file and move to a desired location on your macOS system (ie Applications folder).
 
 ## Usage
 
