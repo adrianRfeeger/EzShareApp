@@ -1,3 +1,4 @@
+# file_ops.py
 import pathlib
 import requests
 import datetime
@@ -34,8 +35,7 @@ def list_dir(ezshare, url):
             match = re.search(regex_pattern, modifypart)
 
             if match:
-                file_ts = datetime.datetime.strptime(match.group(),
-                                                     '%Y-%m-%d   %H:%M:%S').timestamp()
+                file_ts = datetime.datetime.strptime(match.group(), '%Y-%m-%d   %H:%M:%S').timestamp()
             else:
                 file_ts = 0
 

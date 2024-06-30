@@ -1,3 +1,4 @@
+# wifi.py
 import subprocess
 import logging
 
@@ -21,9 +22,7 @@ def connect_to_wifi(ezshare):
     if not ezshare.interface_name:
         raise RuntimeError('No Wi-Fi interface found')
 
-    connect_cmd = f'networksetup -setairportnetwork {ezshare.interface_name} "{ezshare.ssid}"'
-    if ezshare.psk:
-        connect_cmd += f' "{ezshare.psk}"'
+    connect_cmd = f'networksetup -setairportnetwork {ezshare.interface_name} "{ezshare.ssid}" "{ezshare.psk}"'
     try:
         connect_result = subprocess.run(connect_cmd, shell=True,
                                         capture_output=True,

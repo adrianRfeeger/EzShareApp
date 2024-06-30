@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+# main.py
 from PyQt6.QtWidgets import QApplication
 from gui import EzShareCPAP
 import sys

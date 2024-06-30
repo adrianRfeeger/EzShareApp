@@ -1,3 +1,4 @@
+# ezshare.py
 import pathlib
 import logging
 import sys
@@ -22,7 +23,7 @@ class EZShare:
         self.psk = None
         self.connection_id = None
         self.interface_name = None
-        self.platform_system = platform.system()
+        self.platform_system = 'Darwin'  # Hardcoded for macOS
         self.connected = False
         self.session = requests.Session()
         self.ignore = None
@@ -54,7 +55,7 @@ class EZShare:
         self.ssid = ssid
         self.psk = psk
         self.connection_id = None
-        self.platform_system = platform.system()
+        self.platform_system = 'Darwin'  # Hardcoded for macOS
         self.interface_name = None
         self.connected = False
         self.session = requests.Session()
