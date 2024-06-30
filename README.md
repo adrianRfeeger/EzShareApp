@@ -3,7 +3,7 @@
 
 ## Overview
 
-This program downloads files from an EzShare SD card when used in CPAP devices (like the ResMed AirSense 10 Elite) to a local directory on a macOS system. The downloaded files can then be used with programs such as OSCAR and SleepHQ for data analysis and visualization.
+This program downloads files from an EzShare SD card when used in CPAP devices (like the ResMed AirSense 10 Elite) to a local directory on a macOS system. The downloaded files can then be used with programs such as [OSCAR](https://www.sleepfiles.com/OSCAR/) and [SleepHQ](https://home.sleephq.com/) for data analysis and visualization.
 
 ## Features
 
