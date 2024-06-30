@@ -81,7 +81,7 @@ EzShareCPAP is a macOS program designed to download files from an ez Share SD ca
 
 **Wi-Fi Connection Issues:**
   - Verify the SSID and PSK in the GUI are correct. Default SSID is `ez Share`, and the default PSK is `88888888`.
-  - Ensure the EzShare SD card is powered on and within range.
+  - Ensure the ez Share SD card/adapter is inserted to a powered on device (ie CPAP) and within range of your computer (5-10 metres).
 
  **File Download Issues:**
   - Confirm the URL in the GUI points to the correct EzShare SD card address.
