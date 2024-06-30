@@ -1,3 +1,4 @@
+# gui.py
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QProgressBar, QFileDialog, QMessageBox
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
@@ -177,9 +178,11 @@ class EzShareCPAP(QMainWindow):
         QMessageBox.information(self, 'Defaults Restored', 'Settings have been restored to defaults.')
 
     def browse_path(self):
-        options = QFileDialog.Options()
-        options |= QFileDialog.Option.ShowDirsOnly
-        directory = QFileDialog.getExistingDirectory(self, "Select Directory", options=options)
+        dialog = QFileDialog(self)
+        dialog.setFileMode(QFileDialog.FileMode.Directory)
+        dialog.setOption(QFileDialog.Option.ShowDirsOnly, True)
+        options = dialog.options()
+        directory = dialog.getExistingDirectory(self, "Select Directory", options=options)
         if directory:
             self.path_entry.setText(directory)
 
