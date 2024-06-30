@@ -1,5 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 
+block_cipher = None
+
 a = Analysis(
     ['main.py'],
     pathex=['.'],
@@ -13,7 +15,7 @@ a = Analysis(
     optimize=2
 )
 
-pyz = PYZ(a.pure)
+pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 
 exe = EXE(
     pyz,
@@ -42,8 +44,8 @@ app = BUNDLE(
     coll,
     name='EzShareCPAP.app',
     icon='icon.icns',
-    bundle_identifier=None,
-info_plist={
+    bundle_identifier='com.ezsharecpap',
+    info_plist={
         'CFBundleName': 'EzShareCPAP',
         'CFBundleDisplayName': 'EzShareCPAP',
         'CFBundleGetInfoString': 'EzShareCPAP',
@@ -53,8 +55,8 @@ info_plist={
         'NSAppTransportSecurity': {
             'NSAllowsArbitraryLoads': True,
         },
-        'NSDocumentsFolderUsageDescription': 'Reason for accessing the Documents folder',
-        'NSLocalNetworkUsageDescription': 'Reason for accessing the local network',
-        'NSLocationWhenInUseUsageDescription': 'Reason for accessing location information',
+        'NSDocumentsFolderUsageDescription': 'This application requires access to the Documents folder.',
+        'NSLocalNetworkUsageDescription': 'This application requires access to the local network to find and communicate with devices.',
+        'NSLocationWhenInUseUsageDescription': 'This application requires access to location information for better user experience.',
     }
 )
