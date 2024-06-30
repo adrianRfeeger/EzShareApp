@@ -44,7 +44,7 @@ EzShareCPAP is a macOS program designed to download files from an ez Share SD ca
    pip install -r requirements.txt
    ```
 
-3. **Running from Source**
+3. **Running from Source:**
    ```
    python main.py
    ```
