@@ -46,7 +46,7 @@ class EzShareWorker(QThread):
         self.ezshare.disconnect_from_wifi()
         self.wait()  # Ensure the thread finishes properly
 
-class EzShareApp(QMainWindow):
+class EzShareCPAP(QMainWindow):
     def __init__(self):
         super().__init__()
         self.config_file = resource_path('config.ini')
@@ -58,7 +58,7 @@ class EzShareApp(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        self.setWindowTitle('EzShare')
+        self.setWindowTitle('EzShareCPAP')
         self.setWindowIcon(QIcon(resource_path('icon.icns')))  # Set the window icon
 
         central_widget = QWidget()
@@ -255,9 +255,10 @@ class EzShareApp(QMainWindow):
         event.accept()
 
 if __name__ == "__main__":
+    import sys
     from PyQt6.QtWidgets import QApplication
 
     app = QApplication(sys.argv)
-    ex = EzShareApp()
+    ex = EzShareCPAP()
     ex.show()
     sys.exit(app.exec())

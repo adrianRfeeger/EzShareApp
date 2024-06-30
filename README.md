@@ -51,12 +51,12 @@ This program downloads files from an EzShare SD card used in CPAP devices like t
    Buttons:
    - **Start**: Initiates the synchronization process.
    - **Save Settings**: Saves the current settings to `config.ini`.
-   - **Restore Defaults**: Restores the default settings.
+   - **Restore Defaults**: Restores the default settings from `config.ini`.
    - **Cancel**: Cancels the current operation.
 
    - **Progress Bar**: Displays the progress of the file synchronization process.
 
-   The GUI handles the configuration settings directly, so you don't need to manually edit the `config.ini` file however for more advanced use you can. Simply enter your settings in the GUI and click "Save Settings" to store them.
+   The GUI handles the configuration settings directly, so you don't need to manually edit the `config.ini` file. Simply enter your settings in the GUI and click "Save Settings" to store them.
 
 ## File Structure
 
