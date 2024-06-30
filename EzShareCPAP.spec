@@ -54,7 +54,6 @@ info_plist={
             'NSAllowsArbitraryLoads': True,
         },
         'NSDocumentsFolderUsageDescription': 'Reason for accessing the Documents folder',
-        'NSDesktopFolderUsageDescription': 'Reason for accessing the Desktop folder',
         'NSLocalNetworkUsageDescription': 'Reason for accessing the local network',
         'NSLocationWhenInUseUsageDescription': 'Reason for accessing location information',
     }
