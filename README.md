@@ -63,7 +63,7 @@ This program downloads files from an EzShare SD card used in CPAP devices like t
 - `gui.py`: Graphical user interface for the program, which also handles configuration settings.
 - `ezshare.py`: Main functionality for managing Wi-Fi connection and file synchronization.
 - `wifi.py`: Manages Wi-Fi connections specific to macOS.
-- `file_ops.py`: Handles file operations such as directory traversal and file downloading.=
+- `file_ops.py`: Handles file operations such as directory traversal and file downloading.
 - `config.ini`: Configuration file for storing Wi-Fi credentials and paths.
 
 ## Troubleshooting
