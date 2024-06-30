@@ -1,4 +1,4 @@
-# EzShareApp - CPAP Data Downloader for macOS
+# EzShare CPAP
 <img width="548" alt="image" src="https://github.com/adrianRfeeger/EzShareApp/assets/139186297/53d70cd0-f5e6-4cef-8a80-ef06244aa36a">
 
 ## Overview
