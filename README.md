@@ -46,13 +46,13 @@ EzShareCPAP is a macOS program designed to download files from an EzShare SD car
 
 ### Running from Release Version (macOS ARM64/silicon only)
 
-   **Run the standalone application:**
+**Run the standalone application:**
 
    - Navigate to where you put EzShareCPAP.app and double-click it.
 
 ### Running from Source
 
-   **Run the program:**
+**Run the program:**
 
    ```
    python main.py
