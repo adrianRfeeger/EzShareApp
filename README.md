@@ -22,7 +22,7 @@ EzShareCPAP is a macOS program designed to download files from an [ez Share SD c
 
 ## Installation
 
-### From Release Version (macOS ARM64/silicon only)
+### From Release Version (mac M series/ARM64/silicon only - sorry I don't have an intel machine to compile and test)
 
 1. **Download the release version:**
 
