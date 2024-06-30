@@ -42,5 +42,20 @@ app = BUNDLE(
     coll,
     name='EzShareCPAP.app',
     icon='icon.icns',
-    bundle_identifier=None
+    bundle_identifier=None,
+info_plist={
+        'CFBundleName': 'EzShareCPAP',
+        'CFBundleDisplayName': 'EzShareCPAP',
+        'CFBundleGetInfoString': 'EzShareCPAP',
+        'CFBundleIdentifier': 'com.ezsharecpap',  # Replace with your bundle identifier
+        'CFBundleVersion': '1.0.1',
+        'CFBundleShortVersionString': '1.0.1',
+        'NSAppTransportSecurity': {
+            'NSAllowsArbitraryLoads': True,
+        },
+        'NSDocumentsFolderUsageDescription': 'Reason for accessing the Documents folder',
+        'NSDesktopFolderUsageDescription': 'Reason for accessing the Desktop folder',
+        'NSLocalNetworkUsageDescription': 'Reason for accessing the local network',
+        'NSLocationWhenInUseUsageDescription': 'Reason for accessing location information',
+    }
 )
