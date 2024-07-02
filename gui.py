@@ -272,7 +272,7 @@ class EzShareCPAP(QMainWindow):
     def load_default_config(self):
         default_config = configparser.ConfigParser()
         default_config['Settings'] = {
-            'path': '/Users/yourusername/Documents/CPAP_Data/SD_card',
+            'path': '~/Documents/CPAP_Data/SD_card',
             'url': 'http://192.168.4.1/dir?dir=A:',
             'start_time': '',
             'show_progress': 'true',
