@@ -12,6 +12,8 @@ EzShareCPAP is a macOS program designed to download files from an [ez Share SD c
 - **User Interface:** Provides a graphical user interface (GUI) for ease of use.
 - **Configuration:** Handles configuration settings directly through the GUI.
 - **Real-time Updates:** Displays status updates during the file synchronisation process.
+- **Import with OSCAR:** Option to automatically import data with OSCAR after completion.
+- **Quit After Completion:** Option to automatically quit the application after completion.
 
 ## Prerequisites
 
@@ -66,26 +68,42 @@ EzShareCPAP is a macOS program designed to download files from an [ez Share SD c
    pyinstaller EzShareCPAP.spec
    ```
 
-3. **Locate the compiled application:**
-
-   - After running the above command, the compiled application will be located in the `dist` directory.
+   - This will create a standalone executable in the `dist` folder.
 
 ## Usage
 
-### Using the GUI:
+### Graphical User Interface (GUI)
 
-- **Path:** Specify the local directory for downloading files. Use the "Browse" button to select the directory.
-- **URL:** Enter the URL of the ez Share SD card, typically `http://192.168.4.1/dir?dir=A:`.
-- **WiFi SSID:** Enter the SSID of the ez Share SD card's Wi-Fi network. The default SSID is `ez Share`.
-- **WiFi PSK:** Enter the pre-shared key (PSK) for the Wi-Fi network. The default PSK is `88888888`.
+The GUI provides an easy way to configure and run the file synchronisation process.
+
+**Path:**  
+Specify the local directory where the files will be downloaded.
+
+**URL:**  
+Specify the URL of the ez Share SD card.
+
+**Wi-Fi SSID:**  
+Specify the SSID of the ez Share Wi-Fi network. The default SSID is `ez Share`.
+
+**Wi-Fi PSK:**  
+Specify the PSK (password) for the ez Share Wi-Fi network. The default PSK is `88888888`.
+
+**Checkboxes:**
+- **Import with OSCAR after completion:** Automatically imports data into OSCAR after the synchronisation process is completed.
+- **Quit after completion:** Automatically quits the application after the synchronisation process is completed.
 
 **Buttons:**
 - **Start:** Initiates the synchronisation process.
 - **Save Settings:** Saves the current settings to `config.ini`.
-- **Restore Defaults:** Restores the default ez Share Wi-Fi settings.
+- **Restore Defaults:** Restores the default settings.
 - **Cancel:** Cancels the current operation.
+- **Quit:** Closes the application.
 
-**Progress Bar:** Displays the progress of the file synchronisation process.
+**Progress Bar:**  
+Displays the progress of the file synchronisation process.
+
+**Status Label:**  
+Displays the current status of the application.
 
 The GUI manages the configuration settings directly, eliminating the need to manually edit the `config.ini` file. Enter your settings in the GUI and click "Save Settings" to store them.
 
@@ -111,7 +129,7 @@ The GUI manages the configuration settings directly, eliminating the need to man
 ### Wi-Fi Connection Issues:
 
 - Verify the SSID and PSK in the GUI are correct. Default SSID is `ez Share`, and the default PSK is `88888888`.
-- Ensure the ez Share SD card/adapter is inserted into a powered-on device (e.g., CPAP) and within range of your computer (5-10 metres).
+- Ensure the EzShare SD card/adapter is inserted into a powered-on device (e.g., CPAP) and within range of your computer (5-10 metres).
 
 ### File Download Issues:
 
