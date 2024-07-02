@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QProgressBar, QFileDialog, QCheckBox
-from PyQt6.QtGui import QIcon
+from PyQt6.QtGui import QIcon, QFont
 from PyQt6.QtCore import Qt, QThread, pyqtSignal, QTimer
 import configparser
 import os
@@ -73,17 +73,28 @@ class EzShareCPAP(QMainWindow):
         self.setWindowTitle('EzShareCPAP')
         self.setWindowIcon(QIcon(resource_path('icon.icns')))  # Set the window icon
 
+        # Central widget
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
 
-        layout = QVBoxLayout()
+        # Layouts
+        main_layout = QVBoxLayout()
+        form_layout = QVBoxLayout()
+        button_layout = QHBoxLayout()
+
+        # Font and style
+        font = QFont()
+        font.setPointSize(12)
 
         # Path
         path_layout = QHBoxLayout()
         self.path_label = QLabel('Path:')
+        self.path_label.setFont(font)
         self.path_entry = QLineEdit(self.config['Settings']['path'])
+        self.path_entry.setFont(font)
         self.path_entry.setReadOnly(True)  # Make the path entry read-only
         self.path_browse_btn = QPushButton('Browse')
+        self.path_browse_btn.setFont(font)
         self.path_browse_btn.clicked.connect(self.browse_path)
         path_layout.addWidget(self.path_label)
         path_layout.addWidget(self.path_entry)
@@ -92,48 +103,60 @@ class EzShareCPAP(QMainWindow):
         # URL
         url_layout = QHBoxLayout()
         self.url_label = QLabel('URL:')
+        self.url_label.setFont(font)
         self.url_entry = QLineEdit(self.config['Settings']['url'])
+        self.url_entry.setFont(font)
         url_layout.addWidget(self.url_label)
         url_layout.addWidget(self.url_entry)
 
         # WiFi SSID
         ssid_layout = QHBoxLayout()
         self.ssid_label = QLabel('WiFi SSID:')
+        self.ssid_label.setFont(font)
         self.ssid_entry = QLineEdit(self.config['WiFi']['ssid'])
+        self.ssid_entry.setFont(font)
         ssid_layout.addWidget(self.ssid_label)
         ssid_layout.addWidget(self.ssid_entry)
 
         # WiFi PSK
         psk_layout = QHBoxLayout()
         self.psk_label = QLabel('WiFi PSK:')
+        self.psk_label.setFont(font)
         self.psk_entry = QLineEdit(self.config['WiFi']['psk'])
+        self.psk_entry.setFont(font)
         self.psk_entry.setEchoMode(QLineEdit.EchoMode.Password)
         psk_layout.addWidget(self.psk_label)
         psk_layout.addWidget(self.psk_entry)
 
         # Checkboxes
         self.import_oscar_checkbox = QCheckBox("Import with OSCAR after completion")
+        self.import_oscar_checkbox.setFont(font)
         self.import_oscar_checkbox.setChecked(self.config['Settings'].getboolean('import_oscar', False))
         self.quit_checkbox = QCheckBox("Quit after completion")
+        self.quit_checkbox.setFont(font)
         self.quit_checkbox.setChecked(self.config['Settings'].getboolean('quit_after_completion', False))
 
         # Buttons
-        btn_layout = QHBoxLayout()
         self.start_btn = QPushButton('Start')
+        self.start_btn.setFont(font)
         self.start_btn.clicked.connect(self.start_process)
         self.save_btn = QPushButton('Save Settings')
+        self.save_btn.setFont(font)
         self.save_btn.clicked.connect(self.save_config)
         self.default_btn = QPushButton('Restore Defaults')
+        self.default_btn.setFont(font)
         self.default_btn.clicked.connect(self.restore_defaults)
         self.cancel_btn = QPushButton('Cancel')
+        self.cancel_btn.setFont(font)
         self.cancel_btn.clicked.connect(self.cancel_process)
         self.quit_btn = QPushButton('Quit')
-        self.quit_btn.clicked.connect(self.close)
-        btn_layout.addWidget(self.start_btn)
-        btn_layout.addWidget(self.save_btn)
-        btn_layout.addWidget(self.default_btn)
-        btn_layout.addWidget(self.cancel_btn)
-        btn_layout.addWidget(self.quit_btn)
+        self.quit_btn.setFont(font)
+        self.quit_btn.clicked.connect(self.close_event_handler)
+        button_layout.addWidget(self.start_btn)
+        button_layout.addWidget(self.save_btn)
+        button_layout.addWidget(self.default_btn)
+        button_layout.addWidget(self.cancel_btn)
+        button_layout.addWidget(self.quit_btn)
 
         # Progress bar
         self.progress_bar = QProgressBar()
@@ -142,19 +165,22 @@ class EzShareCPAP(QMainWindow):
 
         # Status label
         self.status_label = QLabel("Ready.")
+        self.status_label.setFont(font)
         self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        layout.addLayout(path_layout)
-        layout.addLayout(url_layout)
-        layout.addLayout(ssid_layout)
-        layout.addLayout(psk_layout)
-        layout.addWidget(self.import_oscar_checkbox)
-        layout.addWidget(self.quit_checkbox)
-        layout.addLayout(btn_layout)
-        layout.addWidget(self.progress_bar)
-        layout.addWidget(self.status_label)
+        # Add layouts to main layout
+        form_layout.addLayout(path_layout)
+        form_layout.addLayout(url_layout)
+        form_layout.addLayout(ssid_layout)
+        form_layout.addLayout(psk_layout)
+        form_layout.addWidget(self.import_oscar_checkbox)
+        form_layout.addWidget(self.quit_checkbox)
+        main_layout.addLayout(form_layout)
+        main_layout.addLayout(button_layout)
+        main_layout.addWidget(self.progress_bar)
+        main_layout.addWidget(self.status_label)
 
-        central_widget.setLayout(layout)
+        central_widget.setLayout(main_layout)
 
     def browse_path(self):
         dialog = QFileDialog(self)
@@ -261,12 +287,15 @@ class EzShareCPAP(QMainWindow):
             self.progress_bar.setValue(0)
             self.update_status('Process cancelled.', 'info')
 
-    def closeEvent(self, event):
+    def close_event_handler(self):
         if self.worker and self.worker.isRunning():
-            self.worker.stop()
-            self.worker.wait()
+            self.cancel_process()
         self.update_status('Ready.', 'info')
         self.progress_bar.setValue(0)
+        self.close()
+
+    def closeEvent(self, event):
+        self.close_event_handler()
         event.accept()
 
     def load_default_config(self):
