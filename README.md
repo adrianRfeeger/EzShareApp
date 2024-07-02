@@ -109,7 +109,6 @@ The GUI manages the configuration settings directly, eliminating the need to man
 
 ## File Structure
 
-- `.deepsource.toml`: Configuration file for DeepSource analysis.
 - `EzShareCPAP.code-workspace`: Workspace settings for Visual Studio Code.
 - `EzShareCPAP.spec`: PyInstaller specification file for building the standalone application.
 - `README.md`: This file, containing documentation for the project.
@@ -117,9 +116,8 @@ The GUI manages the configuration settings directly, eliminating the need to man
 - `ezshare.py`: Manages Wi-Fi connection and file synchronisation.
 - `file_ops.py`: Manages file operations, including directory traversal and file downloading.
 - `gui.py`: Handles the graphical user interface and configuration settings.
-- `icon drive.png`: Image file for the drive icon.
+- `disk_icon.png`: Image file for the disk icon.
 - `icon.icns`: Icon file for the macOS application.
-- `icon.png`: PNG version of the application icon.
 - `main.py`: Entry point for the program.
 - `requirements.txt`: Lists required Python packages for the project.
 - `wifi.py`: Handles Wi-Fi connections specific to macOS.
