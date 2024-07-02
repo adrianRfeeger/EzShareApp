@@ -1,6 +1,5 @@
-from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QProgressBar, QFileDialog, QCheckBox
-from PyQt6.QtGui import QIcon, QFont
-from PyQt6.QtCore import Qt, QThread, pyqtSignal, QTimer
+from PyQt6.QtWidgets import QMainWindow, QApplication, QFileDialog
+from PyQt6.QtCore import QTimer, QThread, pyqtSignal
 import configparser
 import os
 import sys
@@ -8,6 +7,7 @@ import pathlib
 import subprocess
 from ezshare import EZShare
 from wifi import connect_to_wifi, disconnect_from_wifi
+from ui_main import Ui_EzShareCPAP
 
 def resource_path(relative_path):
     """ Get the absolute path to a resource, works for dev and for PyInstaller """
@@ -61,7 +61,9 @@ class EzShareCPAP(QMainWindow):
         self.config_file = resource_path('config.ini')
         self.default_config = self.load_default_config()
         self.config = configparser.ConfigParser()
-        self.load_config()
+        self.ui = Ui_EzShareCPAP()
+        self.ui.setupUi(self)
+        self.load_config()  # Load config after setting up the UI
         self.ezshare = EZShare()
         self.worker = None
         self.initUI()
@@ -70,117 +72,21 @@ class EzShareCPAP(QMainWindow):
         self.status_timer.timeout.connect(self.reset_status)
 
     def initUI(self):
-        self.setWindowTitle('EzShareCPAP')
-        self.setWindowIcon(QIcon(resource_path('icon.icns')))  # Set the window icon
+        # Connect buttons to functions
+        self.ui.pathBrowseBtn.clicked.connect(self.browse_path)
+        self.ui.startBtn.clicked.connect(self.start_process)
+        self.ui.saveBtn.clicked.connect(self.save_config)
+        self.ui.defaultBtn.clicked.connect(self.restore_defaults)
+        self.ui.cancelBtn.clicked.connect(self.cancel_process)
+        self.ui.quitBtn.clicked.connect(self.close_event_handler)
 
-        # Central widget
-        central_widget = QWidget()
-        self.setCentralWidget(central_widget)
-
-        # Layouts
-        main_layout = QVBoxLayout()
-        form_layout = QVBoxLayout()
-        button_layout = QHBoxLayout()
-
-        # Font and style
-        font = QFont()
-        font.setPointSize(12)
-
-        # Path
-        path_layout = QHBoxLayout()
-        self.path_label = QLabel('Path:')
-        self.path_label.setFont(font)
-        self.path_entry = QLineEdit(self.config['Settings']['path'])
-        self.path_entry.setFont(font)
-        self.path_entry.setReadOnly(True)  # Make the path entry read-only
-        self.path_browse_btn = QPushButton('Browse')
-        self.path_browse_btn.setFont(font)
-        self.path_browse_btn.clicked.connect(self.browse_path)
-        path_layout.addWidget(self.path_label)
-        path_layout.addWidget(self.path_entry)
-        path_layout.addWidget(self.path_browse_btn)
-
-        # URL
-        url_layout = QHBoxLayout()
-        self.url_label = QLabel('URL:')
-        self.url_label.setFont(font)
-        self.url_entry = QLineEdit(self.config['Settings']['url'])
-        self.url_entry.setFont(font)
-        url_layout.addWidget(self.url_label)
-        url_layout.addWidget(self.url_entry)
-
-        # WiFi SSID
-        ssid_layout = QHBoxLayout()
-        self.ssid_label = QLabel('WiFi SSID:')
-        self.ssid_label.setFont(font)
-        self.ssid_entry = QLineEdit(self.config['WiFi']['ssid'])
-        self.ssid_entry.setFont(font)
-        ssid_layout.addWidget(self.ssid_label)
-        ssid_layout.addWidget(self.ssid_entry)
-
-        # WiFi PSK
-        psk_layout = QHBoxLayout()
-        self.psk_label = QLabel('WiFi PSK:')
-        self.psk_label.setFont(font)
-        self.psk_entry = QLineEdit(self.config['WiFi']['psk'])
-        self.psk_entry.setFont(font)
-        self.psk_entry.setEchoMode(QLineEdit.EchoMode.Password)
-        psk_layout.addWidget(self.psk_label)
-        psk_layout.addWidget(self.psk_entry)
-
-        # Checkboxes
-        self.import_oscar_checkbox = QCheckBox("Import with OSCAR after completion")
-        self.import_oscar_checkbox.setFont(font)
-        self.import_oscar_checkbox.setChecked(self.config['Settings'].getboolean('import_oscar', False))
-        self.quit_checkbox = QCheckBox("Quit after completion")
-        self.quit_checkbox.setFont(font)
-        self.quit_checkbox.setChecked(self.config['Settings'].getboolean('quit_after_completion', False))
-
-        # Buttons
-        self.start_btn = QPushButton('Start')
-        self.start_btn.setFont(font)
-        self.start_btn.clicked.connect(self.start_process)
-        self.save_btn = QPushButton('Save Settings')
-        self.save_btn.setFont(font)
-        self.save_btn.clicked.connect(self.save_config)
-        self.default_btn = QPushButton('Restore Defaults')
-        self.default_btn.setFont(font)
-        self.default_btn.clicked.connect(self.restore_defaults)
-        self.cancel_btn = QPushButton('Cancel')
-        self.cancel_btn.setFont(font)
-        self.cancel_btn.clicked.connect(self.cancel_process)
-        self.quit_btn = QPushButton('Quit')
-        self.quit_btn.setFont(font)
-        self.quit_btn.clicked.connect(self.close_event_handler)
-        button_layout.addWidget(self.start_btn)
-        button_layout.addWidget(self.save_btn)
-        button_layout.addWidget(self.default_btn)
-        button_layout.addWidget(self.cancel_btn)
-        button_layout.addWidget(self.quit_btn)
-
-        # Progress bar
-        self.progress_bar = QProgressBar()
-        self.progress_bar.setValue(0)
-        self.progress_bar.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        # Status label
-        self.status_label = QLabel("Ready.")
-        self.status_label.setFont(font)
-        self.status_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        # Add layouts to main layout
-        form_layout.addLayout(path_layout)
-        form_layout.addLayout(url_layout)
-        form_layout.addLayout(ssid_layout)
-        form_layout.addLayout(psk_layout)
-        form_layout.addWidget(self.import_oscar_checkbox)
-        form_layout.addWidget(self.quit_checkbox)
-        main_layout.addLayout(form_layout)
-        main_layout.addLayout(button_layout)
-        main_layout.addWidget(self.progress_bar)
-        main_layout.addWidget(self.status_label)
-
-        central_widget.setLayout(main_layout)
+        # Set initial values from config
+        self.ui.pathEntry.setText(self.config['Settings']['path'])
+        self.ui.urlEntry.setText(self.config['Settings']['url'])
+        self.ui.ssidEntry.setText(self.config['WiFi']['ssid'])
+        self.ui.pskEntry.setText(self.config['WiFi']['psk'])
+        self.ui.importOscarCheckbox.setChecked(self.config['Settings'].getboolean('import_oscar', False))
+        self.ui.quitCheckbox.setChecked(self.config['Settings'].getboolean('quit_after_completion', False))
 
     def browse_path(self):
         dialog = QFileDialog(self)
@@ -189,13 +95,13 @@ class EzShareCPAP(QMainWindow):
         options = dialog.options()
         directory = dialog.getExistingDirectory(self, "Select Directory", options=options)
         if directory:
-            self.path_entry.setText(directory)
+            self.ui.pathEntry.setText(directory)
 
     def start_process(self):
-        path = self.path_entry.text()
-        url = self.url_entry.text()
-        ssid = self.ssid_entry.text()
-        psk = self.psk_entry.text()
+        path = self.ui.pathEntry.text()
+        url = self.ui.urlEntry.text()
+        ssid = self.ui.ssidEntry.text()
+        psk = self.ui.pskEntry.text()
 
         if not path or not url or not ssid:
             self.update_status('Input Error: All fields must be filled out.', 'error')
@@ -215,8 +121,8 @@ class EzShareCPAP(QMainWindow):
         self.config['Settings']['url'] = url
         self.config['WiFi']['ssid'] = ssid
         self.config['WiFi']['psk'] = psk
-        self.config['Settings']['import_oscar'] = str(self.import_oscar_checkbox.isChecked())
-        self.config['Settings']['quit_after_completion'] = str(self.quit_checkbox.isChecked())
+        self.config['Settings']['import_oscar'] = str(self.ui.importOscarCheckbox.isChecked())
+        self.config['Settings']['quit_after_completion'] = str(self.ui.quitCheckbox.isChecked())
 
         self.ezshare.set_params(
             path=expanded_path,
@@ -245,14 +151,14 @@ class EzShareCPAP(QMainWindow):
         self.worker.start()
 
     def update_progress(self, value):
-        self.progress_bar.setValue(value)
+        self.ui.progressBar.setValue(value)
 
     def update_status(self, message, message_type='info'):
         if message_type == 'error':
-            self.status_label.setStyleSheet("color: red;")
+            self.ui.statusLabel.setStyleSheet("color: red;")
         else:
-            self.status_label.setStyleSheet("")  # Reset to default color
-        self.status_label.setText(message)
+            self.ui.statusLabel.setStyleSheet("")  # Reset to default color
+        self.ui.statusLabel.setText(message)
         self.status_timer.start(5000)  # Reset status to "Ready." after 5 seconds
 
     def reset_status(self):
@@ -260,10 +166,10 @@ class EzShareCPAP(QMainWindow):
 
     def process_finished(self):
         self.update_status('Ready.', 'info')
-        self.progress_bar.setValue(0)
-        if self.import_oscar_checkbox.isChecked():
+        self.ui.progressBar.setValue(0)
+        if self.ui.importOscarCheckbox.isChecked():
             self.import_cpap_data_with_oscar()
-        if self.quit_checkbox.isChecked():
+        if self.ui.quitCheckbox.isChecked():
             self.close()
 
     def import_cpap_data_with_oscar(self):
@@ -284,14 +190,14 @@ class EzShareCPAP(QMainWindow):
         if self.worker and self.worker.isRunning():
             self.worker.stop()
             self.worker.wait()  # Ensure the thread finishes properly
-            self.progress_bar.setValue(0)
+            self.ui.progressBar.setValue(0)
             self.update_status('Process cancelled.', 'info')
 
     def close_event_handler(self):
         if self.worker and self.worker.isRunning():
             self.cancel_process()
         self.update_status('Ready.', 'info')
-        self.progress_bar.setValue(0)
+        self.ui.progressBar.setValue(0)
         self.close()
 
     def closeEvent(self, event):
@@ -328,30 +234,27 @@ class EzShareCPAP(QMainWindow):
         self.config.read(self.config_file)
 
     def save_config(self):
-        self.config['Settings']['path'] = self.path_entry.text()
-        self.config['Settings']['url'] = self.url_entry.text()
-        self.config['WiFi']['ssid'] = self.ssid_entry.text()
-        self.config['WiFi']['psk'] = self.psk_entry.text()
-        self.config['Settings']['import_oscar'] = str(self.import_oscar_checkbox.isChecked())
-        self.config['Settings']['quit_after_completion'] = str(self.quit_checkbox.isChecked())
+        self.config['Settings']['path'] = self.ui.pathEntry.text()
+        self.config['Settings']['url'] = self.ui.urlEntry.text()
+        self.config['WiFi']['ssid'] = self.ui.ssidEntry.text()
+        self.config['WiFi']['psk'] = self.ui.pskEntry.text()
+        self.config['Settings']['import_oscar'] = str(self.ui.importOscarCheckbox.isChecked())
+        self.config['Settings']['quit_after_completion'] = str(self.ui.quitCheckbox.isChecked())
         with open(self.config_file, 'w') as configfile:
             self.config.write(configfile)
         self.update_status('Settings have been saved successfully.', 'info')
 
     def restore_defaults(self):
         self.config = self.default_config
-        self.path_entry.setText(self.config['Settings']['path'])
-        self.url_entry.setText(self.config['Settings']['url'])
-        self.ssid_entry.setText(self.config['WiFi']['ssid'])
-        self.psk_entry.setText(self.config['WiFi']['psk'])
-        self.import_oscar_checkbox.setChecked(self.config['Settings'].getboolean('import_oscar', False))
-        self.quit_checkbox.setChecked(self.config['Settings'].getboolean('quit_after_completion', False))
+        self.ui.pathEntry.setText(self.config['Settings']['path'])
+        self.ui.urlEntry.setText(self.config['Settings']['url'])
+        self.ui.ssidEntry.setText(self.config['WiFi']['ssid'])
+        self.ui.pskEntry.setText(self.config['WiFi']['psk'])
+        self.ui.importOscarCheckbox.setChecked(self.config['Settings'].getboolean('import_oscar', False))
+        self.ui.quitCheckbox.setChecked(self.config['Settings'].getboolean('quit_after_completion', False))
         self.update_status('Settings have been restored to defaults.', 'info')
 
 if __name__ == "__main__":
-    import sys
-    from PyQt6.QtWidgets import QApplication
-
     app = QApplication(sys.argv)
     ex = EzShareCPAP()
     ex.show()
