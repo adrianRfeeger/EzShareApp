@@ -10,19 +10,20 @@ from ezshare import EZShare
 from wifi import connect_to_wifi, disconnect_from_wifi
 
 def resource_path(relative_path):
+    """ Get the absolute path to a resource, works for dev and for PyInstaller """
     base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base_path, relative_path)
 
-def shorten_path(path):
-    home = pathlib.Path.home()
+def expand_path(path):
     try:
-        return '~' + str(pathlib.Path(path).relative_to(home))
-    except ValueError:
-        return str(path)
+        expanded_path = pathlib.Path(path).expanduser()
+        return expanded_path
+    except RuntimeError as e:
+        raise
 
 class EzShareWorker(QThread):
     progress = pyqtSignal(int)
-    status = pyqtSignal(str, str)
+    status = pyqtSignal(str, str)  # Added second parameter for message type (info/error)
     finished = pyqtSignal()
 
     def __init__(self, ezshare):
@@ -34,12 +35,12 @@ class EzShareWorker(QThread):
         self.ezshare.set_progress_callback(self.update_progress)
         self.ezshare.set_status_callback(self.update_status)
         try:
-            connect_to_wifi(self.ezshare)
+            connect_to_wifi(self.ezshare)  # Connect to Wi-Fi before starting the process
             self.ezshare.run()
         except RuntimeError as e:
             self.update_status(f'Error: {e}', 'error')
         finally:
-            self.ezshare.disconnect_from_wifi()
+            disconnect_from_wifi(self.ezshare)  # Disconnect from Wi-Fi after the process completes
             self.finished.emit()
 
     def update_progress(self, value):
@@ -50,11 +51,9 @@ class EzShareWorker(QThread):
 
     def stop(self):
         self._is_running = False
-        self.ezshare.stop()
-        self.terminate()
-        self.wait()
-        if self.ezshare.connected:
-            self.ezshare.disconnect_from_wifi()
+        self.terminate()  # Forcefully terminate the thread
+        disconnect_from_wifi(self.ezshare)  # Ensure Wi-Fi is disconnected when stopping
+        self.ezshare.disconnect_from_wifi()
 
 class EzShareCPAP(QMainWindow):
     def __init__(self):
@@ -66,10 +65,13 @@ class EzShareCPAP(QMainWindow):
         self.ezshare = EZShare()
         self.worker = None
         self.initUI()
+        self.status_timer = QTimer(self)
+        self.status_timer.setSingleShot(True)
+        self.status_timer.timeout.connect(self.reset_status)
 
     def initUI(self):
         self.setWindowTitle('EzShareCPAP')
-        self.setWindowIcon(QIcon(resource_path('icon.icns')))
+        self.setWindowIcon(QIcon(resource_path('icon.icns')))  # Set the window icon
 
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
@@ -80,7 +82,7 @@ class EzShareCPAP(QMainWindow):
         path_layout = QHBoxLayout()
         self.path_label = QLabel('Path:')
         self.path_entry = QLineEdit(self.config['Settings']['path'])
-        self.path_entry.setReadOnly(True)
+        self.path_entry.setReadOnly(True)  # Make the path entry read-only
         self.path_browse_btn = QPushButton('Browse')
         self.path_browse_btn.clicked.connect(self.browse_path)
         path_layout.addWidget(self.path_label)
@@ -117,17 +119,21 @@ class EzShareCPAP(QMainWindow):
 
         # Buttons
         btn_layout = QHBoxLayout()
-        buttons = [
-            ('Start', self.start_process),
-            ('Save Settings', self.save_config),
-            ('Restore Defaults', self.restore_defaults),
-            ('Cancel', self.cancel_process),
-            ('Quit', self.close)
-        ]
-        for label, func in buttons:
-            btn = QPushButton(label)
-            btn.clicked.connect(func)
-            btn_layout.addWidget(btn)
+        self.start_btn = QPushButton('Start')
+        self.start_btn.clicked.connect(self.start_process)
+        self.save_btn = QPushButton('Save Settings')
+        self.save_btn.clicked.connect(self.save_config)
+        self.default_btn = QPushButton('Restore Defaults')
+        self.default_btn.clicked.connect(self.restore_defaults)
+        self.cancel_btn = QPushButton('Cancel')
+        self.cancel_btn.clicked.connect(self.cancel_process)
+        self.quit_btn = QPushButton('Quit')
+        self.quit_btn.clicked.connect(self.close)
+        btn_layout.addWidget(self.start_btn)
+        btn_layout.addWidget(self.save_btn)
+        btn_layout.addWidget(self.default_btn)
+        btn_layout.addWidget(self.cancel_btn)
+        btn_layout.addWidget(self.quit_btn)
 
         # Progress bar
         self.progress_bar = QProgressBar()
@@ -149,12 +155,6 @@ class EzShareCPAP(QMainWindow):
         layout.addWidget(self.status_label)
 
         central_widget.setLayout(layout)
-        self.setCentralWidget(central_widget)
-
-        # Timer for status reset
-        self.status_timer = QTimer()
-        self.status_timer.setSingleShot(True)
-        self.status_timer.timeout.connect(self.reset_status)
 
     def browse_path(self):
         dialog = QFileDialog(self)
@@ -163,7 +163,7 @@ class EzShareCPAP(QMainWindow):
         options = dialog.options()
         directory = dialog.getExistingDirectory(self, "Select Directory", options=options)
         if directory:
-            self.path_entry.setText(shorten_path(directory))
+            self.path_entry.setText(directory)
 
     def start_process(self):
         path = self.path_entry.text()
@@ -175,11 +175,17 @@ class EzShareCPAP(QMainWindow):
             self.update_status('Input Error: All fields must be filled out.', 'error')
             return
 
-        if not pathlib.Path(path).expanduser().is_dir():
+        try:
+            expanded_path = expand_path(path)
+        except RuntimeError as e:
+            self.update_status(f'Could not determine home directory: {e}', 'error')
+            return
+
+        if not expanded_path.is_dir():
             self.update_status('Invalid Path: The specified path does not exist or is not a directory.', 'error')
             return
 
-        self.config['Settings']['path'] = path
+        self.config['Settings']['path'] = str(expanded_path)
         self.config['Settings']['url'] = url
         self.config['WiFi']['ssid'] = ssid
         self.config['WiFi']['psk'] = psk
@@ -187,7 +193,7 @@ class EzShareCPAP(QMainWindow):
         self.config['Settings']['quit_after_completion'] = str(self.quit_checkbox.isChecked())
 
         self.ezshare.set_params(
-            path=path,
+            path=expanded_path,
             url=url,
             start_time=None,
             show_progress=True,
@@ -216,11 +222,12 @@ class EzShareCPAP(QMainWindow):
         self.progress_bar.setValue(value)
 
     def update_status(self, message, message_type='info'):
-        self.status_label.setStyleSheet("color: red;" if message_type == 'error' else "")
+        if message_type == 'error':
+            self.status_label.setStyleSheet("color: red;")
+        else:
+            self.status_label.setStyleSheet("")  # Reset to default color
         self.status_label.setText(message)
-
-        # Start/reset the timer to revert the status to "Ready."
-        self.status_timer.start(3000)  # 3 seconds
+        self.status_timer.start(5000)  # Reset status to "Ready." after 5 seconds
 
     def reset_status(self):
         self.update_status('Ready.', 'info')
@@ -250,7 +257,7 @@ class EzShareCPAP(QMainWindow):
     def cancel_process(self):
         if self.worker and self.worker.isRunning():
             self.worker.stop()
-            self.worker.wait()
+            self.worker.wait()  # Ensure the thread finishes properly
             self.progress_bar.setValue(0)
             self.update_status('Process cancelled.', 'info')
 
@@ -265,7 +272,7 @@ class EzShareCPAP(QMainWindow):
     def load_default_config(self):
         default_config = configparser.ConfigParser()
         default_config['Settings'] = {
-            'path': '~/Documents/CPAP_Data/SD_card',
+            'path': '/Users/yourusername/Documents/CPAP_Data/SD_card',
             'url': 'http://192.168.4.1/dir?dir=A:',
             'start_time': '',
             'show_progress': 'true',

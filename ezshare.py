@@ -1,32 +1,66 @@
 import pathlib
 import logging
-import time
+import sys
 import requests
+import time
 import urllib.parse
-from urllib3.util import Retry
+from urllib3.util import retry
 from requests import adapters
 from wifi import connect_to_wifi, disconnect_from_wifi, wifi_connected
 from file_ops import recursive_traversal, list_dir
 
 class EZShare:
     def __init__(self):
-        self.session = requests.Session()
-        self.platform_system = 'Darwin'
-        self.connected = False
+        self.path = None
+        self.url = None
+        self.start_time = None
+        self.show_progress = None
+        self.overwrite = None
+        self.keep_old = None
+        self.ssid = None
+        self.psk = None
         self.connection_id = None
-        self.processed_files = 0  # Initialize processed_files
-        self.should_stop = False  # Flag to indicate if the process should stop
+        self.interface_name = None
+        self.platform_system = 'Darwin'  # Hardcoded for macOS
+        self.connected = False
+        self.session = requests.Session()
+        self.ignore = None
+        self.retries = None
+        self.retry = None
+        self.connection_delay = None
+        self.debug = None
+        self.progress_callback = None
+        self.status_callback = None
+        self.total_files = 0
+        self.processed_files = 0
 
-    def set_params(self, **kwargs):
-        log_level = logging.DEBUG if kwargs.get('debug') else logging.INFO if kwargs.get('verbose') else logging.WARN
-        logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=log_level)
-
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-
-        self.path = pathlib.Path(self.path).expanduser()
-        self.ignore = ['.', '..', 'back to photo'] + self.ignore
-        self.retry = Retry(total=self.retries, backoff_factor=0.25)
+    def set_params(self, path, url, start_time, show_progress, verbose,
+                   overwrite, keep_old, ssid, psk, ignore, retries, connection_delay, debug):
+        if debug:
+            log_level = logging.DEBUG
+        elif verbose:
+            log_level = logging.INFO
+        else:
+            log_level = logging.WARN
+        logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                            level=log_level)
+        self.path = pathlib.Path(path).expanduser()
+        self.url = url
+        self.start_time = start_time
+        self.show_progress = show_progress
+        self.overwrite = overwrite
+        self.keep_old = keep_old
+        self.ssid = ssid
+        self.psk = psk
+        self.connection_id = None
+        self.platform_system = 'Darwin'  # Hardcoded for macOS
+        self.interface_name = None
+        self.connected = False
+        self.session = requests.Session()
+        self.ignore = ['.', '..', 'back to photo'] + ignore
+        self.retries = retries
+        self.retry = retry.Retry(total=retries, backoff_factor=0.25)
+        self.connection_delay = connection_delay
         self.session.mount('http://', adapters.HTTPAdapter(max_retries=self.retry))
 
     def set_progress_callback(self, callback):
@@ -50,8 +84,6 @@ class EZShare:
 
     def run(self):
         self.update_status('Starting process...')
-        self.processed_files = 0  # Reset processed_files before starting
-        self.should_stop = False  # Reset should_stop flag before starting
         try:
             if self.ssid:
                 self.update_status(f'Connecting to {self.ssid}...')
@@ -77,16 +109,12 @@ class EZShare:
                 self.update_status(f'Path {self.path} created.')
             except FileExistsError:
                 self.update_status(f'Path {self.path} already exists and is a file. Unable to continue.')
-                return
+                sys.exit(f'Path {self.path} already exists and is a file. Unable to continue.')
 
+            # Calculate total files
             self.update_status('Calculating total files...')
             self.total_files = self.calculate_total_files(self.url, self.path, self.overwrite)
             self.update_status(f'Total files to sync: {self.total_files}')
-            
-            if self.total_files == 0:
-                self.update_status('No files to sync.')
-                return
-
             self.update_status('Starting file transfer...')
             self.processed_files = recursive_traversal(self, self.url, self.path, self.total_files, self.processed_files)
             self.update_status('File transfer completed.')
@@ -98,14 +126,10 @@ class EZShare:
         total_files = 0
         files, dirs = list_dir(self, url)
         for filename, _, file_ts in files:
-            if self.should_stop:
-                return total_files
             local_path = dir_path / filename
             if overwrite or not local_path.is_file() or local_path.stat().st_mtime < file_ts:
                 total_files += 1
         for dirname, dir_url in dirs:
-            if self.should_stop:
-                return total_files
             new_dir_path = dir_path / dirname
             absolute_dir_url = urllib.parse.urljoin(url, dir_url)
             total_files += self.calculate_total_files(absolute_dir_url, new_dir_path, overwrite)
@@ -119,7 +143,3 @@ class EZShare:
         finally:
             self.connected = False
             self.connection_id = None
-
-    def stop(self):
-        self.should_stop = True
-        self.disconnect_from_wifi()
