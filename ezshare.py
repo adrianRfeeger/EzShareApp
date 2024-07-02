@@ -2,7 +2,6 @@ import pathlib
 import logging
 import sys
 import requests
-import platform
 import time
 import urllib.parse
 from urllib3.util import retry

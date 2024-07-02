@@ -4,6 +4,7 @@ from PyQt6.QtCore import Qt, QThread, pyqtSignal
 import configparser
 import os
 import sys
+import pathlib
 from ezshare import EZShare
 from wifi import connect_to_wifi, disconnect_from_wifi
 
@@ -11,6 +12,14 @@ def resource_path(relative_path):
     """ Get the absolute path to a resource, works for dev and for PyInstaller """
     base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base_path, relative_path)
+
+def shorten_path(path):
+    """ Convert an absolute path to a shortened path using ~ for the home directory. """
+    home = pathlib.Path.home()
+    try:
+        return '~' + str(pathlib.Path(path).relative_to(home))
+    except ValueError:
+        return str(path)
 
 class EzShareWorker(QThread):
     progress = pyqtSignal(int)
@@ -70,6 +79,7 @@ class EzShareCPAP(QMainWindow):
         path_layout = QHBoxLayout()
         self.path_label = QLabel('Path:')
         self.path_entry = QLineEdit(self.config['Settings']['path'])
+        self.path_entry.setReadOnly(True)  # Make the path entry read-only
         self.path_browse_btn = QPushButton('Browse')
         self.path_browse_btn.clicked.connect(self.browse_path)
         path_layout.addWidget(self.path_label)
@@ -132,50 +142,6 @@ class EzShareCPAP(QMainWindow):
 
         central_widget.setLayout(layout)
 
-    def load_default_config(self):
-        default_config = configparser.ConfigParser()
-        default_config['Settings'] = {
-            'path': '~/Documents/CPAP_Data/SD_card',
-            'url': 'http://192.168.4.1/dir?dir=A:',
-            'start_time': '',
-            'show_progress': 'true',
-            'verbose': 'true',
-            'overwrite': 'false',
-            'keep_old': 'false',
-            'ignore': '',
-            'retries': '3',
-            'connection_delay': '5',
-            'debug': 'true'
-        }
-        default_config['WiFi'] = {
-            'ssid': 'ez Share',
-            'psk': '88888888'
-        }
-        return default_config
-
-    def load_config(self):
-        if not os.path.exists(self.config_file):
-            with open(self.config_file, 'w') as configfile:
-                self.default_config.write(configfile)
-        self.config.read(self.config_file)
-
-    def save_config(self):
-        self.config['Settings']['path'] = self.path_entry.text()
-        self.config['Settings']['url'] = self.url_entry.text()
-        self.config['WiFi']['ssid'] = self.ssid_entry.text()
-        self.config['WiFi']['psk'] = self.psk_entry.text()
-        with open(self.config_file, 'w') as configfile:
-            self.config.write(configfile)
-        QMessageBox.information(self, 'Settings Saved', 'Settings have been saved successfully.')
-
-    def restore_defaults(self):
-        self.config = self.default_config
-        self.path_entry.setText(self.config['Settings']['path'])
-        self.url_entry.setText(self.config['Settings']['url'])
-        self.ssid_entry.setText(self.config['WiFi']['ssid'])
-        self.psk_entry.setText(self.config['WiFi']['psk'])
-        QMessageBox.information(self, 'Defaults Restored', 'Settings have been restored to defaults.')
-
     def browse_path(self):
         dialog = QFileDialog(self)
         dialog.setFileMode(QFileDialog.FileMode.Directory)
@@ -183,7 +149,7 @@ class EzShareCPAP(QMainWindow):
         options = dialog.options()
         directory = dialog.getExistingDirectory(self, "Select Directory", options=options)
         if directory:
-            self.path_entry.setText(directory)
+            self.path_entry.setText(shorten_path(directory))
 
     def start_process(self):
         path = self.path_entry.text()
@@ -193,6 +159,10 @@ class EzShareCPAP(QMainWindow):
 
         if not path or not url or not ssid:
             QMessageBox.warning(self, 'Input Error', 'All fields must be filled out.')
+            return
+
+        if not pathlib.Path(path).expanduser().is_dir():
+            QMessageBox.warning(self, 'Invalid Path', 'The specified path does not exist or is not a directory.')
             return
 
         self.config['Settings']['path'] = path
@@ -255,6 +225,50 @@ class EzShareCPAP(QMainWindow):
             self.worker.stop()
             self.worker.wait()
         event.accept()
+
+    def load_default_config(self):
+        default_config = configparser.ConfigParser()
+        default_config['Settings'] = {
+            'path': '~/Documents/CPAP_Data/SD_card',
+            'url': 'http://192.168.4.1/dir?dir=A:',
+            'start_time': '',
+            'show_progress': 'true',
+            'verbose': 'true',
+            'overwrite': 'false',
+            'keep_old': 'false',
+            'ignore': '',
+            'retries': '3',
+            'connection_delay': '5',
+            'debug': 'true'
+        }
+        default_config['WiFi'] = {
+            'ssid': 'ez Share',
+            'psk': '88888888'
+        }
+        return default_config
+
+    def load_config(self):
+        if not os.path.exists(self.config_file):
+            with open(self.config_file, 'w') as configfile:
+                self.default_config.write(configfile)
+        self.config.read(self.config_file)
+
+    def save_config(self):
+        self.config['Settings']['path'] = self.path_entry.text()
+        self.config['Settings']['url'] = self.url_entry.text()
+        self.config['WiFi']['ssid'] = self.ssid_entry.text()
+        self.config['WiFi']['psk'] = self.psk_entry.text()
+        with open(self.config_file, 'w') as configfile:
+            self.config.write(configfile)
+        QMessageBox.information(self, 'Settings Saved', 'Settings have been saved successfully.')
+
+    def restore_defaults(self):
+        self.config = self.default_config
+        self.path_entry.setText(self.config['Settings']['path'])
+        self.url_entry.setText(self.config['Settings']['url'])
+        self.ssid_entry.setText(self.config['WiFi']['ssid'])
+        self.psk_entry.setText(self.config['WiFi']['psk'])
+        QMessageBox.information(self, 'Defaults Restored', 'Settings have been restored to defaults.')
 
 if __name__ == "__main__":
     import sys
