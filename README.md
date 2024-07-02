@@ -123,6 +123,7 @@ The GUI manages the configuration settings directly, eliminating the need to man
 - `main.py`: Entry point for the program.
 - `requirements.txt`: Lists required Python packages for the project.
 - `wifi.py`: Handles Wi-Fi connections specific to macOS.
+- `ui_main.py`: Defines the gui styling.
 
 ## Troubleshooting
 
