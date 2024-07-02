@@ -1,6 +1,6 @@
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QProgressBar, QFileDialog, QCheckBox
 from PyQt6.QtGui import QIcon
-from PyQt6.QtCore import Qt, QThread, pyqtSignal
+from PyQt6.QtCore import Qt, QThread, pyqtSignal, QTimer
 import configparser
 import os
 import sys
@@ -10,12 +10,10 @@ from ezshare import EZShare
 from wifi import connect_to_wifi, disconnect_from_wifi
 
 def resource_path(relative_path):
-    """ Get the absolute path to a resource, works for dev and for PyInstaller """
     base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base_path, relative_path)
 
 def shorten_path(path):
-    """ Convert an absolute path to a shortened path using ~ for the home directory. """
     home = pathlib.Path.home()
     try:
         return '~' + str(pathlib.Path(path).relative_to(home))
@@ -24,7 +22,7 @@ def shorten_path(path):
 
 class EzShareWorker(QThread):
     progress = pyqtSignal(int)
-    status = pyqtSignal(str, str)  # Added second parameter for message type (info/error)
+    status = pyqtSignal(str, str)
     finished = pyqtSignal()
 
     def __init__(self, ezshare):
@@ -36,12 +34,12 @@ class EzShareWorker(QThread):
         self.ezshare.set_progress_callback(self.update_progress)
         self.ezshare.set_status_callback(self.update_status)
         try:
-            connect_to_wifi(self.ezshare)  # Connect to Wi-Fi before starting the process
+            connect_to_wifi(self.ezshare)
             self.ezshare.run()
         except RuntimeError as e:
             self.update_status(f'Error: {e}', 'error')
         finally:
-            disconnect_from_wifi(self.ezshare)  # Disconnect from Wi-Fi after the process completes
+            self.ezshare.disconnect_from_wifi()
             self.finished.emit()
 
     def update_progress(self, value):
@@ -52,9 +50,11 @@ class EzShareWorker(QThread):
 
     def stop(self):
         self._is_running = False
-        self.terminate()  # Forcefully terminate the thread
-        disconnect_from_wifi(self.ezshare)  # Ensure Wi-Fi is disconnected when stopping
-        self.ezshare.disconnect_from_wifi()
+        self.ezshare.stop()
+        self.terminate()
+        self.wait()
+        if self.ezshare.connected:
+            self.ezshare.disconnect_from_wifi()
 
 class EzShareCPAP(QMainWindow):
     def __init__(self):
@@ -69,7 +69,7 @@ class EzShareCPAP(QMainWindow):
 
     def initUI(self):
         self.setWindowTitle('EzShareCPAP')
-        self.setWindowIcon(QIcon(resource_path('icon.icns')))  # Set the window icon
+        self.setWindowIcon(QIcon(resource_path('icon.icns')))
 
         central_widget = QWidget()
         self.setCentralWidget(central_widget)
@@ -80,7 +80,7 @@ class EzShareCPAP(QMainWindow):
         path_layout = QHBoxLayout()
         self.path_label = QLabel('Path:')
         self.path_entry = QLineEdit(self.config['Settings']['path'])
-        self.path_entry.setReadOnly(True)  # Make the path entry read-only
+        self.path_entry.setReadOnly(True)
         self.path_browse_btn = QPushButton('Browse')
         self.path_browse_btn.clicked.connect(self.browse_path)
         path_layout.addWidget(self.path_label)
@@ -117,21 +117,17 @@ class EzShareCPAP(QMainWindow):
 
         # Buttons
         btn_layout = QHBoxLayout()
-        self.start_btn = QPushButton('Start')
-        self.start_btn.clicked.connect(self.start_process)
-        self.save_btn = QPushButton('Save Settings')
-        self.save_btn.clicked.connect(self.save_config)
-        self.default_btn = QPushButton('Restore Defaults')
-        self.default_btn.clicked.connect(self.restore_defaults)
-        self.cancel_btn = QPushButton('Cancel')
-        self.cancel_btn.clicked.connect(self.cancel_process)
-        self.quit_btn = QPushButton('Quit')
-        self.quit_btn.clicked.connect(self.close)
-        btn_layout.addWidget(self.start_btn)
-        btn_layout.addWidget(self.save_btn)
-        btn_layout.addWidget(self.default_btn)
-        btn_layout.addWidget(self.cancel_btn)
-        btn_layout.addWidget(self.quit_btn)
+        buttons = [
+            ('Start', self.start_process),
+            ('Save Settings', self.save_config),
+            ('Restore Defaults', self.restore_defaults),
+            ('Cancel', self.cancel_process),
+            ('Quit', self.close)
+        ]
+        for label, func in buttons:
+            btn = QPushButton(label)
+            btn.clicked.connect(func)
+            btn_layout.addWidget(btn)
 
         # Progress bar
         self.progress_bar = QProgressBar()
@@ -153,6 +149,12 @@ class EzShareCPAP(QMainWindow):
         layout.addWidget(self.status_label)
 
         central_widget.setLayout(layout)
+        self.setCentralWidget(central_widget)
+
+        # Timer for status reset
+        self.status_timer = QTimer()
+        self.status_timer.setSingleShot(True)
+        self.status_timer.timeout.connect(self.reset_status)
 
     def browse_path(self):
         dialog = QFileDialog(self)
@@ -214,11 +216,14 @@ class EzShareCPAP(QMainWindow):
         self.progress_bar.setValue(value)
 
     def update_status(self, message, message_type='info'):
-        if message_type == 'error':
-            self.status_label.setStyleSheet("color: red;")
-        else:
-            self.status_label.setStyleSheet("")  # Reset to default color
+        self.status_label.setStyleSheet("color: red;" if message_type == 'error' else "")
         self.status_label.setText(message)
+
+        # Start/reset the timer to revert the status to "Ready."
+        self.status_timer.start(3000)  # 3 seconds
+
+    def reset_status(self):
+        self.update_status('Ready.', 'info')
 
     def process_finished(self):
         self.update_status('Ready.', 'info')
@@ -245,7 +250,7 @@ class EzShareCPAP(QMainWindow):
     def cancel_process(self):
         if self.worker and self.worker.isRunning():
             self.worker.stop()
-            self.worker.wait()  # Ensure the thread finishes properly
+            self.worker.wait()
             self.progress_bar.setValue(0)
             self.update_status('Process cancelled.', 'info')
 
