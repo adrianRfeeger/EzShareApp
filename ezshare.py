@@ -1,4 +1,3 @@
-# ezshare.py
 import pathlib
 import logging
 import sys
@@ -138,4 +137,10 @@ class EZShare:
         return total_files
 
     def disconnect_from_wifi(self):
-        disconnect_from_wifi(self)
+        try:
+            disconnect_from_wifi(self)
+        except RuntimeError as e:
+            logging.error(f'Error disconnecting from Wi-Fi: {e}')
+        finally:
+            self.connected = False
+            self.connection_id = None

@@ -1,4 +1,3 @@
-# wifi.py
 import subprocess
 import logging
 
@@ -57,3 +56,6 @@ def disconnect_from_wifi(ezshare):
             logger.info('Wi-Fi interface %s turned on', ezshare.interface_name)
         except subprocess.CalledProcessError as e:
             raise RuntimeError(f'Error toggling Wi-Fi interface power. Return code: {e.returncode}, error: {e.stderr}') from e
+        finally:
+            ezshare.connected = False
+            ezshare.connection_id = None

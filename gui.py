@@ -1,4 +1,3 @@
-# gui.py
 from PyQt6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QProgressBar, QFileDialog, QMessageBox
 from PyQt6.QtGui import QIcon
 from PyQt6.QtCore import Qt, QThread, pyqtSignal
@@ -43,9 +42,9 @@ class EzShareWorker(QThread):
 
     def stop(self):
         self._is_running = False
+        self.terminate()  # Forcefully terminate the thread
         disconnect_from_wifi(self.ezshare)  # Ensure Wi-Fi is disconnected when stopping
         self.ezshare.disconnect_from_wifi()
-        self.wait()  # Ensure the thread finishes properly
 
 class EzShareCPAP(QMainWindow):
     def __init__(self):
@@ -246,7 +245,7 @@ class EzShareCPAP(QMainWindow):
     def cancel_process(self):
         if self.worker and self.worker.isRunning():
             self.worker.stop()
-            self.worker.wait()
+            self.worker.wait()  # Ensure the thread finishes properly
             self.progress_bar.setValue(0)
             self.status_label.setText('Process cancelled.')
             QMessageBox.information(self, 'Process Cancelled', 'The process has been cancelled.')
