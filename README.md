@@ -111,15 +111,15 @@ The GUI manages the configuration settings directly, eliminating the need to man
 
 - `EzShareCPAP.spec`: PyInstaller specification file for building the standalone application.
 - `README.md`: This file, containing documentation for the project.
-- `config.ini`: Stores Wi-Fi credentials and paths configuration.
+- `icon.icns`: Icon file for the macOS application.
+- `requirements.txt`: Lists required Python packages for the project.
+- `config.ini`: Stores settings.
+- `main.py`: Entry point for the program.
+- `gui.py`: Handles the graphical user interface and configuration settings.
+- `ui_main.py`: Defines the gui styling.
 - `ezshare.py`: Manages Wi-Fi connection and file synchronisation.
 - `file_ops.py`: Manages file operations, including directory traversal and file downloading.
-- `gui.py`: Handles the graphical user interface and configuration settings.
-- `icon.icns`: Icon file for the macOS application.
-- `main.py`: Entry point for the program.
-- `requirements.txt`: Lists required Python packages for the project.
 - `wifi.py`: Handles Wi-Fi connections specific to macOS.
-- `ui_main.py`: Defines the gui styling.
 
 ## Troubleshooting
 
