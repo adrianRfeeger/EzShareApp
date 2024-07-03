@@ -109,14 +109,12 @@ The GUI manages the configuration settings directly, eliminating the need to man
 
 ## File Structure
 
-- `EzShareCPAP.code-workspace`: Workspace settings for Visual Studio Code.
 - `EzShareCPAP.spec`: PyInstaller specification file for building the standalone application.
 - `README.md`: This file, containing documentation for the project.
 - `config.ini`: Stores Wi-Fi credentials and paths configuration.
 - `ezshare.py`: Manages Wi-Fi connection and file synchronisation.
 - `file_ops.py`: Manages file operations, including directory traversal and file downloading.
 - `gui.py`: Handles the graphical user interface and configuration settings.
-- `disk_icon.png`: Image file for the disk icon.
 - `icon.icns`: Icon file for the macOS application.
 - `main.py`: Entry point for the program.
 - `requirements.txt`: Lists required Python packages for the project.
