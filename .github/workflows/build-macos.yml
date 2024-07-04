@@ -71,9 +71,17 @@ jobs:
         </dict>
         </plist>
         EOF
+        set +x  # Disable debug mode
+
+    - name: Code sign the application
+      run: |
+        codesign --deep --force --verify --verbose --sign "Apple Development: adrianfeeger@hotmail.com (CLSNWPVXSU)" dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app
+        codesign --verify --verbose dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app
+
+    - name: Zip the application
+      run: |
         cd dist/${{ matrix.architecture }}
         zip -r9 EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.zip EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app
-        set +x  # Disable debug mode
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
