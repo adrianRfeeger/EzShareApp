@@ -30,7 +30,7 @@ jobs:
             cp config.ini dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/Resources/
             chmod +x dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/MacOS/EzShareCPAP
             echo "Creating Info.plist"
-            cat > dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/Info.plist <<EOF
+            cat > dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/Info.plist <<\EOF
             <?xml version="1.0" encoding="UTF-8"?>
             <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
             <plist version="1.0">
@@ -66,5 +66,13 @@ jobs:
           command: |
             cd dist/x86_64
             zip -r9 EzShareCPAP-x86_64-3.9.zip EzShareCPAP-x86_64-3.9.app
-      - store_artifacts:
-          path: dist/x86_64/EzShareCPAP-x86_64-3.9.zip
+      - persist_to_workspace:
+          root: dist/x86_64
+          paths:
+            - EzShareCPAP-x86_64-3.9.zip
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
