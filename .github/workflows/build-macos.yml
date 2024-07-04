@@ -4,12 +4,12 @@ on: [push, pull_request]
 
 jobs:
   build:
-    name: Build packages
+    name: Build x86_64 package
     runs-on: macos-latest
     strategy:
       matrix:
         python-version: [3.9]
-        architecture: [x86_64, arm64]
+        architecture: [x86_64]
 
     steps:
     - name: Checkout code
@@ -29,18 +29,18 @@ jobs:
         pip install pyinstaller
         pip install -r requirements.txt
 
-    - name: Build application with pyinstaller for ${{ matrix.architecture }}
+    - name: Build application with pyinstaller for x86_64
       run: |
         set -x  # Enable debug mode
-        pyinstaller EzShareCPAP.spec --distpath dist/${{ matrix.architecture }} --log-level=DEBUG
-        mkdir -p dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/MacOS
-        mkdir -p dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/Resources
-        cp -R dist/${{ matrix.architecture }}/EzShareCPAP/* dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/MacOS/
-        cp icon.icns dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/Resources/
-        cp config.ini dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/Resources/
-        chmod +x dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/MacOS/EzShareCPAP
+        pyinstaller EzShareCPAP.spec --distpath dist/x86_64 --log-level=DEBUG
+        mkdir -p dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/MacOS
+        mkdir -p dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/Resources
+        cp -R dist/x86_64/EzShareCPAP/* dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/MacOS/
+        cp icon.icns dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/Resources/
+        cp config.ini dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/Resources/
+        chmod +x dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/MacOS/EzShareCPAP
         echo "Creating Info.plist"
-        cat > dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/Info.plist <<EOF
+        cat > dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/Info.plist <<EOF
         <?xml version="1.0" encoding="UTF-8"?>
         <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
         <plist version="1.0">
@@ -75,18 +75,18 @@ jobs:
 
     - name: Zip the application
       run: |
-        cd dist/${{ matrix.architecture }}
-        zip -r9 EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.zip EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app
+        cd dist/x86_64
+        zip -r9 EzShareCPAP-x86_64-3.9.zip EzShareCPAP-x86_64-3.9.app
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
       with:
-        name: EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}
-        path: dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.zip
+        name: EzShareCPAP-x86_64-3.9
+        path: dist/x86_64/EzShareCPAP-x86_64-3.9.zip
 
     - name: Show build log on failure
       if: failure()
-      run: cat dist/${{ matrix.architecture }}/build.log || echo "No build log found"
+      run: cat dist/x86_64/build.log || echo "No build log found"
 
     - name: Display build directory contents
       if: failure()
