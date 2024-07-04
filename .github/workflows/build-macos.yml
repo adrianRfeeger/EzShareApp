@@ -1,9 +1,6 @@
 name: Build EzShareCPAP for macOS
 
-on:
-  push:
-    tags:
-      - 'v*'
+on: [push, pull_request]
 
 jobs:
   createrelease:
