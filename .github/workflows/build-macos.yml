@@ -36,7 +36,7 @@ jobs:
 
     - name: Rename output file
       run: |
-        mv dist/${{ matrix.architecture }}/main dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app
+        mv dist/${{ matrix.architecture }}/EzShareCPAP dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app
 
     - name: Archive build artifacts
       uses: actions/upload-artifact@v3
