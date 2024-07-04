@@ -1,9 +1,36 @@
 name: Build EzShareCPAP for macOS
 
-on: [push, pull_request]
+on:
+  push:
+    tags:
+      - 'v*'
 
 jobs:
+  createrelease:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+    - name: Output Release URL File
+      run: echo "${{ steps.create_release.outputs.upload_url }}" > release_url.txt
+    - name: Save Release URL File for publish
+      uses: actions/upload-artifact@v1
+      with:
+        name: release_url
+        path: release_url.txt
+
   build:
+    name: Build packages
+    needs: createrelease
     runs-on: macos-latest
     strategy:
       matrix:
@@ -28,26 +55,40 @@ jobs:
         pip install pyinstaller
         pip install -r requirements.txt
 
-    - name: Build application
+    - name: Build application with pyinstaller for ${{ matrix.architecture }}
       run: |
         pyinstaller EzShareCPAP.spec --distpath dist/${{ matrix.architecture }} --log-level=DEBUG
-      env:
-        MACOSX_DEPLOYMENT_TARGET: 10.15
-
-    - name: Create .app Bundle
-      run: |
         mkdir -p dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/MacOS
         mkdir -p dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/Resources
         cp -R dist/${{ matrix.architecture }}/EzShareCPAP/* dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/MacOS/
         cp icon.icns dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/Resources/
         cp config.ini dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/Resources/
         chmod +x dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/MacOS/EzShareCPAP
+        cd dist/${{ matrix.architecture }}
+        zip -r9 EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.zip EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app
 
-    - name: Archive build artifacts
-      uses: actions/upload-artifact@v3
+    - name: Load Release URL File from release job
+      uses: actions/download-artifact@v1
       with:
-        name: EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}
-        path: dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app
+        name: release_url
+
+    - name: Get Release File Name & Upload URL
+      id: get_release_info
+      shell: bash
+      run: |
+        value=`cat release_url/release_url.txt`
+        echo ::set-output name=upload_url::$value
+
+    - name: Upload Release Asset
+      id: upload-release-asset
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release_info.outputs.upload_url }}
+        asset_path: dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.zip
+        asset_name: EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.zip
+        asset_content_type: application/zip
 
     - name: Show build log on failure
       if: failure()
