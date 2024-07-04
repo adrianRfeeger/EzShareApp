@@ -31,12 +31,13 @@ jobs:
 
     - name: Build application with pyinstaller for ${{ matrix.architecture }}
       run: |
+        set -x  # Enable debug mode
         pyinstaller EzShareCPAP.spec --distpath dist/${{ matrix.architecture }} --log-level=DEBUG
         mkdir -p dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/MacOS
         mkdir -p dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/Resources
-        cp -R dist/${{ matrix.architecture }}/EzShareCPAP dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/MacOS/EzShareCPAP
-        cp icon.icns dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/Resources/icon.icns
-        cp config.ini dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/Resources/config.ini
+        cp -R dist/${{ matrix.architecture }}/EzShareCPAP/* dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/MacOS/
+        cp icon.icns dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/Resources/
+        cp config.ini dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/Resources/
         chmod +x dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/MacOS/EzShareCPAP
         echo "Creating Info.plist"
         cat > dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/Info.plist <<EOF
@@ -72,6 +73,7 @@ jobs:
         EOF
         cd dist/${{ matrix.architecture }}
         zip -r9 EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.zip EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app
+        set +x  # Disable debug mode
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
