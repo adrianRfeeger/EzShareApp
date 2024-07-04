@@ -34,9 +34,13 @@ jobs:
       env:
         MACOSX_DEPLOYMENT_TARGET: 10.15
 
-    - name: Rename output file
+    - name: Create .app Bundle
       run: |
-        mv dist/${{ matrix.architecture }}/EzShareCPAP dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app
+        mkdir -p dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/MacOS
+        cp -R dist/${{ matrix.architecture }}/EzShareCPAP dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/MacOS/EzShareCPAP
+        cp icon.icns dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/Resources/icon.icns
+        cp config.ini dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/Resources/config.ini
+        cp -R dist/${{ matrix.architecture }}/__internal dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/MacOS/__internal
 
     - name: Archive build artifacts
       uses: actions/upload-artifact@v3
