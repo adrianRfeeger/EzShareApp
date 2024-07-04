@@ -19,6 +19,9 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
+    - name: Display Python version
+      run: python --version
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
@@ -28,9 +31,8 @@ jobs:
     - name: Build application
       run: |
         pyinstaller --onefile EzShareCPAP.py --distpath dist/${{ matrix.architecture }}
-      shell: bash
       env:
-        MACOSX_DEPLOYMENT_TARGET: 10.15  # or whatever minimum macOS version you support
+        MACOSX_DEPLOYMENT_TARGET: 10.15
 
     - name: Archive build artifacts
       uses: actions/upload-artifact@v3
@@ -38,8 +40,8 @@ jobs:
         name: EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}
         path: dist/${{ matrix.architecture }}/EzShareCPAP*
 
-    - name: Show build log
-      if: failure()
+    - name: Display build directory contents
       run: |
-        cat dist/${{ matrix.architecture }}/build.log
-      shell: bash
+        ls -R dist/
+        cat dist/${{ matrix.architecture }}/build/EzShareCPAP/warneverything.txt || true
+      if: failure()
