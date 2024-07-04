@@ -7,7 +7,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        python-version: [3.9]  # Start with one Python version for simplicity
+        python-version: [3.12]  # Start with one Python version for simplicity
         architecture: [x86_64, arm64]
 
     steps:
@@ -35,7 +35,7 @@ jobs:
         MACOSX_DEPLOYMENT_TARGET: 10.15
 
     - name: Archive build artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}
         path: dist/${{ matrix.architecture }}/EzShareCPAP*
