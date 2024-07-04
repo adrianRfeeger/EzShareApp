@@ -7,7 +7,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        python-version: [3.12]  # Start with one Python version for simplicity
+        python-version: [3.9]
         architecture: [x86_64, arm64]
 
     steps:
@@ -30,19 +30,19 @@ jobs:
 
     - name: Build application
       run: |
-        pyinstaller --onefile EzShareCPAP.py --distpath dist/${{ matrix.architecture }} --log-level=DEBUG
+        pyinstaller --onefile main.py --distpath dist/${{ matrix.architecture }} --log-level=DEBUG
       env:
         MACOSX_DEPLOYMENT_TARGET: 10.15
 
     - name: Archive build artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}
-        path: dist/${{ matrix.architecture }}/EzShareCPAP*
+        path: dist/${{ matrix.architecture }}/main*
 
     - name: Show build log on failure
       if: failure()
-      run: cat dist/${{ matrix.architecture }}/build.log || echo "No build log found"
+      run: cat dist/${{ matrix.architecture }}/build/main.log || echo "No build log found"
 
     - name: Display build directory contents
       if: failure()
