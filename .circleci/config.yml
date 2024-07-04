@@ -1,34 +1,70 @@
-# This config was automatically generated from your source code
-# Stacks detected: deps:python:.
 version: 2.1
-orbs:
-  python: circleci/python@2
+
 jobs:
-  test-python:
-    # Install dependencies and run tests
-    docker:
-      - image: cimg/python:3.8-node
+  build:
+    macos:
+      xcode: "13.2.1"
     steps:
       - checkout
-      - python/install-packages
       - run:
-          name: Run tests
-          command: pytest --junitxml=junit.xml || ((($? == 5)) && echo 'Did not find any tests to run.')
-      - store_test_results:
-          path: junit.xml
-  deploy:
-    # This is an example deploy job, not actually used by the workflow
-    docker:
-      - image: cimg/base:stable
-    steps:
-      # Replace this with steps to deploy to users
+          name: Set up Python
+          command: |
+            brew install pyenv
+            pyenv install 3.9.7
+            pyenv global 3.9.7
+            python --version
       - run:
-          name: deploy
-          command: '#e.g. ./deploy.sh'
-workflows:
-  build-and-test:
-    jobs:
-      - test-python
-    # - deploy:
-    #     requires:
-    #       - test-python
+          name: Install dependencies
+          command: |
+            python -m pip install --upgrade pip
+            pip install pyinstaller
+            pip install -r requirements.txt
+      - run:
+          name: Build with pyinstaller
+          command: |
+            pyinstaller EzShareCPAP.spec --distpath dist/x86_64 --log-level=DEBUG
+            mkdir -p dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/MacOS
+            mkdir -p dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/Resources
+            cp -R dist/x86_64/EzShareCPAP/* dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/MacOS/
+            cp icon.icns dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/Resources/
+            cp config.ini dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/Resources/
+            chmod +x dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/MacOS/EzShareCPAP
+            echo "Creating Info.plist"
+            cat > dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/Info.plist <<EOF
+            <?xml version="1.0" encoding="UTF-8"?>
+            <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+            <plist version="1.0">
+            <dict>
+                <key>CFBundleName</key>
+                <string>EzShareCPAP</string>
+                <key>CFBundleDisplayName</key>
+                <string>EzShareCPAP</string>
+                <key>CFBundleIdentifier</key>
+                <string>com.ezsharecpap</string>
+                <key>CFBundleVersion</key>
+                <string>1.0.1</string>
+                <key>CFBundleShortVersionString</key>
+                <string>1.0.1</string>
+                <key>CFBundlePackageType</key>
+                <string>APPL</string>
+                <key>CFBundleSignature</key>
+                <string>????</string>
+                <key>CFBundleExecutable</key>
+                <string>EzShareCPAP</string>
+                <key>CFBundleIconFile</key>
+                <string>icon.icns</string>
+                <key>NSAppTransportSecurity</key>
+                <dict>
+                    <key>NSAllowsArbitraryLoads</key>
+                    <true/>
+                </dict>
+            </dict>
+            </plist>
+            EOF
+      - run:
+          name: Zip the application
+          command: |
+            cd dist/x86_64
+            zip -r9 EzShareCPAP-x86_64-3.9.zip EzShareCPAP-x86_64-3.9.app
+      - store_artifacts:
+          path: dist/x86_64/EzShareCPAP-x86_64-3.9.zip
