@@ -30,19 +30,23 @@ jobs:
 
     - name: Build application
       run: |
-        pyinstaller --onefile main.py --distpath dist/${{ matrix.architecture }} --log-level=DEBUG
+        pyinstaller EzShareCPAP.spec --distpath dist/${{ matrix.architecture }} --log-level=DEBUG
       env:
         MACOSX_DEPLOYMENT_TARGET: 10.15
+
+    - name: Rename output file
+      run: |
+        mv dist/${{ matrix.architecture }}/main dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app
 
     - name: Archive build artifacts
       uses: actions/upload-artifact@v3
       with:
         name: EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}
-        path: dist/${{ matrix.architecture }}/main*
+        path: dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app
 
     - name: Show build log on failure
       if: failure()
-      run: cat dist/${{ matrix.architecture }}/build/main.log || echo "No build log found"
+      run: cat dist/${{ matrix.architecture }}/build.log || echo "No build log found"
 
     - name: Display build directory contents
       if: failure()
