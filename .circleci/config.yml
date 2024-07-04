@@ -22,6 +22,7 @@ jobs:
       - run:
           name: Build with pyinstaller
           command: |
+            set -x  # Enable debug mode
             pyinstaller EzShareCPAP.spec --distpath dist/x86_64 --log-level=DEBUG
             mkdir -p dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/MacOS
             mkdir -p dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/Resources
@@ -30,7 +31,7 @@ jobs:
             cp config.ini dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/Resources/
             chmod +x dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/MacOS/EzShareCPAP
             echo "Creating Info.plist"
-            cat > dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/Info.plist <<\EOF
+            cat > dist/x86_64/EzShareCPAP-x86_64-3.9.app/Contents/Info.plist <<'EOF'
             <?xml version="1.0" encoding="UTF-8"?>
             <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
             <plist version="1.0">
@@ -61,6 +62,7 @@ jobs:
             </dict>
             </plist>
             EOF
+            set +x  # Disable debug mode
       - run:
           name: Zip the application
           command: |
