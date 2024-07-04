@@ -37,6 +37,7 @@ jobs:
     - name: Create .app Bundle
       run: |
         mkdir -p dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/MacOS
+        mkdir -p dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/Resources
         cp -R dist/${{ matrix.architecture }}/EzShareCPAP dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/MacOS/EzShareCPAP
         cp icon.icns dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/Resources/icon.icns
         cp config.ini dist/${{ matrix.architecture }}/EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}.app/Contents/Resources/config.ini
