@@ -12,10 +12,10 @@ jobs:
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
 
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
 
@@ -37,3 +37,9 @@ jobs:
       with:
         name: EzShareCPAP-${{ matrix.architecture }}-${{ matrix.python-version }}
         path: dist/${{ matrix.architecture }}/EzShareCPAP*
+
+    - name: Show build log
+      if: failure()
+      run: |
+        cat dist/${{ matrix.architecture }}/build.log
+      shell: bash
