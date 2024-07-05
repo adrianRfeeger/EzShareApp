@@ -58,5 +58,8 @@ app = BUNDLE(
         'NSDocumentsFolderUsageDescription': 'This application requires access to the Documents folder.',
         'NSLocalNetworkUsageDescription': 'This application requires access to the local network to find and communicate with devices.',
         'NSLocationWhenInUseUsageDescription': 'This application requires access to location information for better user experience.',
+        'NSAppleEventsUsageDescription': 'This application requires access to AppleEvents to automate OSCAR import.',
+        'NSAccessibilityUsageDescription': 'This application requires access to Accessibility to automate OSCAR import.',
+    
     }
 )
