@@ -1,10 +1,10 @@
 from PyQt6.QtWidgets import QApplication
-from gui import EzShareCPAP
+from gui import ezShareCPAP
 import sys
 
 def main():
     app = QApplication(sys.argv)
-    window = EzShareCPAP()
+    window = ezShareCPAP()
     window.show()
     sys.exit(app.exec())
 

@@ -3,7 +3,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-def connect_to_wifi(ezshare):
+def connect_to_wifi(ezShare):
     get_interface_cmd = 'networksetup -listallhardwareports'
     try:
         get_interface_result = subprocess.run(get_interface_cmd,
@@ -16,46 +16,46 @@ def connect_to_wifi(ezshare):
     interface_lines = get_interface_result.stdout.split('\n')
     for index, line in enumerate(interface_lines):
         if 'Wi-Fi' in line:
-            ezshare.interface_name = interface_lines[index + 1].split(':')[1].strip()
+            ezShare.interface_name = interface_lines[index + 1].split(':')[1].strip()
             break
-    if not ezshare.interface_name:
+    if not ezShare.interface_name:
         raise RuntimeError('No Wi-Fi interface found')
 
-    connect_cmd = f'networksetup -setairportnetwork {ezshare.interface_name} "{ezshare.ssid}" "{ezshare.psk}"'
+    connect_cmd = f'networksetup -setairportnetwork {ezShare.interface_name} "{ezShare.ssid}" "{ezShare.psk}"'
     try:
         connect_result = subprocess.run(connect_cmd, shell=True,
                                         capture_output=True,
                                         text=True, check=True)
     except subprocess.CalledProcessError as e:
-        raise RuntimeError(f'Error connecting to {ezshare.ssid}. Return code: {e.returncode}, error: {e.stderr}') from e
+        raise RuntimeError(f'Error connecting to {ezShare.ssid}. Return code: {e.returncode}, error: {e.stderr}') from e
     if 'Failed' in connect_result.stdout:
-        raise RuntimeError(f'Error connecting to {ezshare.ssid}. Error: {connect_result.stdout}')
-    ezshare.connection_id = ezshare.ssid
-    ezshare.connected = True
+        raise RuntimeError(f'Error connecting to {ezShare.ssid}. Error: {connect_result.stdout}')
+    ezShare.connection_id = ezShare.ssid
+    ezShare.connected = True
 
-def wifi_connected(ezshare):
-    return ezshare.connected
+def wifi_connected(ezShare):
+    return ezShare.connected
 
-def disconnect_from_wifi(ezshare):
-    if ezshare.connection_id:
-        ezshare.print(f'Disconnecting from {ezshare.connection_id}...')
+def disconnect_from_wifi(ezShare):
+    if ezShare.connection_id:
+        ezShare.print(f'Disconnecting from {ezShare.connection_id}...')
 
-        ezshare.print(f'Removing profile for {ezshare.connection_id}...')
-        profile_cmd = f'networksetup -removepreferredwirelessnetwork {ezshare.interface_name} "{ezshare.connection_id}"'
+        ezShare.print(f'Removing profile for {ezShare.connection_id}...')
+        profile_cmd = f'networksetup -removepreferredwirelessnetwork {ezShare.interface_name} "{ezShare.connection_id}"'
         try:
             subprocess.run(profile_cmd, shell=True,
                            capture_output=True, text=True, check=True)
         except subprocess.CalledProcessError as e:
-            raise RuntimeError(f'Error removing network profile for {ezshare.ssid}. Return code: {e.returncode}, error: {e.stderr}') from e
+            raise RuntimeError(f'Error removing network profile for {ezShare.ssid}. Return code: {e.returncode}, error: {e.stderr}') from e
         try:
-            subprocess.run(f'networksetup -setairportpower {ezshare.interface_name} off',
+            subprocess.run(f'networksetup -setairportpower {ezShare.interface_name} off',
                            shell=True, check=True)
-            logger.info('Wi-Fi interface %s turned off', ezshare.interface_name)
-            subprocess.run(f'networksetup -setairportpower {ezshare.interface_name} on',
+            logger.info('Wi-Fi interface %s turned off', ezShare.interface_name)
+            subprocess.run(f'networksetup -setairportpower {ezShare.interface_name} on',
                            shell=True, check=True)
-            logger.info('Wi-Fi interface %s turned on', ezshare.interface_name)
+            logger.info('Wi-Fi interface %s turned on', ezShare.interface_name)
         except subprocess.CalledProcessError as e:
             raise RuntimeError(f'Error toggling Wi-Fi interface power. Return code: {e.returncode}, error: {e.stderr}') from e
         finally:
-            ezshare.connected = False
-            ezshare.connection_id = None
+            ezShare.connected = False
+            ezShare.connection_id = None

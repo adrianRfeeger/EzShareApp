@@ -5,9 +5,9 @@ import os
 import sys
 import pathlib
 import subprocess
-from ezshare import EZShare
+from ezShare import ezShare
 from wifi import connect_to_wifi, disconnect_from_wifi
-from ui_main import Ui_EzShareCPAP
+from ui_main import Ui_ezShareCPAP
 
 def resource_path(relative_path):
     """ Get the absolute path to a resource, works for dev and for PyInstaller """
@@ -21,26 +21,26 @@ def expand_path(path):
     except RuntimeError as e:
         raise
 
-class EzShareWorker(QThread):
+class ezShareWorker(QThread):
     progress = pyqtSignal(int)
     status = pyqtSignal(str, str)  # Added second parameter for message type (info/error)
     finished = pyqtSignal()
 
-    def __init__(self, ezshare):
+    def __init__(self, ezShare):
         super().__init__()
-        self.ezshare = ezshare
+        self.ezShare = ezShare
         self._is_running = True
 
     def run(self):
-        self.ezshare.set_progress_callback(self.update_progress)
-        self.ezshare.set_status_callback(self.update_status)
+        self.ezShare.set_progress_callback(self.update_progress)
+        self.ezShare.set_status_callback(self.update_status)
         try:
-            connect_to_wifi(self.ezshare)  # Connect to Wi-Fi before starting the process
-            self.ezshare.run()
+            connect_to_wifi(self.ezShare)  # Connect to Wi-Fi before starting the process
+            self.ezShare.run()
         except RuntimeError as e:
             self.update_status(f'Error: {e}', 'error')
         finally:
-            disconnect_from_wifi(self.ezshare)  # Disconnect from Wi-Fi after the process completes
+            disconnect_from_wifi(self.ezShare)  # Disconnect from Wi-Fi after the process completes
             self.finished.emit()
 
     def update_progress(self, value):
@@ -52,19 +52,19 @@ class EzShareWorker(QThread):
     def stop(self):
         self._is_running = False
         self.terminate()  # Forcefully terminate the thread
-        disconnect_from_wifi(self.ezshare)  # Ensure Wi-Fi is disconnected when stopping
-        self.ezshare.disconnect_from_wifi()
+        disconnect_from_wifi(self.ezShare)  # Ensure Wi-Fi is disconnected when stopping
+        self.ezShare.disconnect_from_wifi()
 
-class EzShareCPAP(QMainWindow):
+class ezShareCPAP(QMainWindow):
     def __init__(self):
         super().__init__()
         self.config_file = resource_path('config.ini')
         self.default_config = self.load_default_config()
         self.config = configparser.ConfigParser()
-        self.ui = Ui_EzShareCPAP()
+        self.ui = Ui_ezShareCPAP()
         self.ui.setupUi(self)
         self.load_config()  # Load config after setting up the UI
-        self.ezshare = EZShare()
+        self.ezShare = ezShare()
         self.worker = None
         self.initUI()
         self.status_timer = QTimer(self)
@@ -124,7 +124,7 @@ class EzShareCPAP(QMainWindow):
         self.config['Settings']['import_oscar'] = str(self.ui.importOscarCheckbox.isChecked())
         self.config['Settings']['quit_after_completion'] = str(self.ui.quitCheckbox.isChecked())
 
-        self.ezshare.set_params(
+        self.ezShare.set_params(
             path=expanded_path,
             url=url,
             start_time=None,
@@ -144,7 +144,7 @@ class EzShareCPAP(QMainWindow):
             self.worker.stop()
             self.worker.wait()
 
-        self.worker = EzShareWorker(self.ezshare)
+        self.worker = ezShareWorker(self.ezShare)
         self.worker.progress.connect(self.update_progress)
         self.worker.status.connect(self.update_status)
         self.worker.finished.connect(self.process_finished)
@@ -256,6 +256,6 @@ class EzShareCPAP(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    ex = EzShareCPAP()
+    ex = ezShareCPAP()
     ex.show()
     sys.exit(app.exec())
