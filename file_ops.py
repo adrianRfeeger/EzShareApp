@@ -10,13 +10,13 @@ from tempfile import NamedTemporaryFile
 
 logger = logging.getLogger(__name__)
 
-def recursive_traversal(ezShare, url, dir_path, total_files, processed_files):
-    files, dirs = list_dir(ezShare, url)
-    processed_files = check_files(ezShare, files, url, dir_path, total_files, processed_files)
-    processed_files = check_dirs(ezShare, dirs, url, dir_path, total_files, processed_files)
+def recursive_traversal(ezshare, url, dir_path, total_files, processed_files):
+    files, dirs = list_dir(ezshare, url)
+    processed_files = check_files(ezshare, files, url, dir_path, total_files, processed_files)
+    processed_files = check_dirs(ezshare, dirs, url, dir_path, total_files, processed_files)
     return processed_files
 
-def list_dir(ezShare, url):
+def list_dir(ezshare, url):
     html_content = requests.get(url, timeout=5)
     soup = bs4.BeautifulSoup(html_content.text, 'html.parser')
     files = []
@@ -48,7 +48,7 @@ def list_dir(ezShare, url):
 
                 link_href = link['href']
 
-                if link_text in ezShare.ignore or link_text.startswith('.'):
+                if link_text in ezshare.ignore or link_text.startswith('.'):
                     continue
                 parsed_url = urllib.parse.urlparse(link_href)
                 if parsed_url.path.endswith('download'):
@@ -57,28 +57,28 @@ def list_dir(ezShare, url):
                     dirs.append((link_text, link_href))
     return files, dirs
 
-def check_files(ezShare, files, url, dir_path: pathlib.Path, total_files, processed_files):
+def check_files(ezshare, files, url, dir_path: pathlib.Path, total_files, processed_files):
     for filename, file_url, file_ts in files:
         local_path = dir_path / filename
         absolute_file_url = urllib.parse.urljoin(url, f'download?{file_url}')
         if total_files == 0:
-            ezShare.update_status(f'Downloading file "{filename}" {processed_files + 1}/{total_files} (0%)')
+            ezshare.update_status(f'Downloading file "{filename}" {processed_files + 1}/{total_files} (0%)')
         else:
-            ezShare.update_status(f'Downloading file "{filename}" {processed_files + 1}/{total_files} ({int((processed_files + 1) / total_files * 100)}%)')
-        downloaded = download_file(ezShare, absolute_file_url, local_path, file_ts=file_ts)
+            ezshare.update_status(f'Downloading file "{filename}" {processed_files + 1}/{total_files} ({int((processed_files + 1) / total_files * 100)}%)')
+        downloaded = download_file(ezshare, absolute_file_url, local_path, file_ts=file_ts)
         if downloaded:
             processed_files += 1
-            ezShare.update_progress(0 if total_files == 0 else int(processed_files / total_files * 100))
+            ezshare.update_progress(0 if total_files == 0 else int(processed_files / total_files * 100))
     return processed_files
 
-def download_file(ezShare, url, file_path: pathlib.Path, file_ts=None):
+def download_file(ezshare, url, file_path: pathlib.Path, file_ts=None):
     mtime = 0
     already_exists = file_path.is_file()
     if already_exists:
         mtime = file_path.stat().st_mtime
-    if (ezShare.overwrite or mtime < file_ts) and not (already_exists and ezShare.keep_old):
+    if (ezshare.overwrite or mtime < file_ts) and not (already_exists and ezshare.keep_old):
         logger.debug('Downloading %s from %s', str(file_path), url)
-        response = ezShare.session.get(url, stream=True)
+        response = ezshare.session.get(url, stream=True)
         response.raise_for_status()
 
         total_size = int(response.headers.get('content-length', 0))
@@ -114,10 +114,10 @@ def download_file(ezShare, url, file_path: pathlib.Path, file_ts=None):
                     str(file_path))
         return False
 
-def check_dirs(ezShare, dirs, url, dir_path: pathlib.Path, total_files, processed_files):
+def check_dirs(ezshare, dirs, url, dir_path: pathlib.Path, total_files, processed_files):
     for dirname, dir_url in dirs:
         new_dir_path = dir_path / dirname
         new_dir_path.mkdir(exist_ok=True)
         absolute_dir_url = urllib.parse.urljoin(url, dir_url)
-        processed_files = recursive_traversal(ezShare, absolute_dir_url, new_dir_path, total_files, processed_files)
+        processed_files = recursive_traversal(ezshare, absolute_dir_url, new_dir_path, total_files, processed_files)
     return processed_files

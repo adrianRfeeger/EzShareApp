@@ -44,12 +44,12 @@ app = BUNDLE(
     coll,
     name='ezShareCPAP.app',
     icon='icon.icns',
-    bundle_identifier='com.ezSharecpap',
+    bundle_identifier='com.ezsharecpap',
     info_plist={
         'CFBundleName': 'ezShareCPAP',
         'CFBundleDisplayName': 'ezShareCPAP',
         'CFBundleGetInfoString': 'ezShareCPAP',
-        'CFBundleIdentifier': 'com.ezSharecpap',
+        'CFBundleIdentifier': 'com.ezsharecpap',
         'CFBundleVersion': '1.0.1',
         'CFBundleShortVersionString': '1.0.1',
         'NSAppTransportSecurity': {

@@ -1,5 +1,5 @@
 # ezShareCPAP
-![image](https://github.com/adrianRfeeger/ezShareCPAP/assets/139186297/348612ef-ac2f-491f-8f51-f74adee45966)
+![image](https://github.com/adrianRfeeger/ezShareCPAP/assets/139186297/35138fa2-d3af-4628-ba87-84a87e82f01c)
 
 ## Overview
 
@@ -27,7 +27,7 @@ ezShareCPAP is a macOS program designed to download files from an [ez Share SD c
 
 1. **Download the release version:**
 
-   - Download the release version compiled by PyInstaller from [here](https://github.com/adrianrfeeger/EzShareCPAP/releases).
+   - Download the release version compiled by PyInstaller from [here](https://github.com/adrianrfeeger/ezShareCPAP/releases).
 
 2. **Extract the ZIP file:**
 
@@ -117,7 +117,7 @@ The GUI manages the configuration settings directly, eliminating the need to man
 - `main.py`: Entry point for the program.
 - `gui.py`: Handles the graphical user interface and configuration settings.
 - `ui_main.py`: Defines the gui styling.
-- `ezShare.py`: Manages Wi-Fi connection and file synchronisation.
+- `ezshare.py`: Manages Wi-Fi connection and file synchronisation.
 - `file_ops.py`: Manages file operations, including directory traversal and file downloading.
 - `wifi.py`: Handles Wi-Fi connections specific to macOS.
 

@@ -5,7 +5,7 @@ import os
 import sys
 import pathlib
 import subprocess
-from ezShare import ezShare
+from ezshare import ezShare
 from wifi import connect_to_wifi, disconnect_from_wifi
 from ui_main import Ui_ezShareCPAP
 
@@ -26,21 +26,21 @@ class ezShareWorker(QThread):
     status = pyqtSignal(str, str)  # Added second parameter for message type (info/error)
     finished = pyqtSignal()
 
-    def __init__(self, ezShare):
+    def __init__(self, ezshare):
         super().__init__()
-        self.ezShare = ezShare
+        self.ezshare = ezshare
         self._is_running = True
 
     def run(self):
-        self.ezShare.set_progress_callback(self.update_progress)
-        self.ezShare.set_status_callback(self.update_status)
+        self.ezshare.set_progress_callback(self.update_progress)
+        self.ezshare.set_status_callback(self.update_status)
         try:
-            connect_to_wifi(self.ezShare)  # Connect to Wi-Fi before starting the process
-            self.ezShare.run()
+            connect_to_wifi(self.ezshare)  # Connect to Wi-Fi before starting the process
+            self.ezshare.run()
         except RuntimeError as e:
             self.update_status(f'Error: {e}', 'error')
         finally:
-            disconnect_from_wifi(self.ezShare)  # Disconnect from Wi-Fi after the process completes
+            disconnect_from_wifi(self.ezshare)  # Disconnect from Wi-Fi after the process completes
             self.finished.emit()
 
     def update_progress(self, value):
@@ -52,8 +52,8 @@ class ezShareWorker(QThread):
     def stop(self):
         self._is_running = False
         self.terminate()  # Forcefully terminate the thread
-        disconnect_from_wifi(self.ezShare)  # Ensure Wi-Fi is disconnected when stopping
-        self.ezShare.disconnect_from_wifi()
+        disconnect_from_wifi(self.ezshare)  # Ensure Wi-Fi is disconnected when stopping
+        self.ezshare.disconnect_from_wifi()
 
 class ezShareCPAP(QMainWindow):
     def __init__(self):
@@ -64,7 +64,7 @@ class ezShareCPAP(QMainWindow):
         self.ui = Ui_ezShareCPAP()
         self.ui.setupUi(self)
         self.load_config()  # Load config after setting up the UI
-        self.ezShare = ezShare()
+        self.ezshare = ezShare()
         self.worker = None
         self.initUI()
         self.status_timer = QTimer(self)
@@ -124,7 +124,7 @@ class ezShareCPAP(QMainWindow):
         self.config['Settings']['import_oscar'] = str(self.ui.importOscarCheckbox.isChecked())
         self.config['Settings']['quit_after_completion'] = str(self.ui.quitCheckbox.isChecked())
 
-        self.ezShare.set_params(
+        self.ezshare.set_params(
             path=expanded_path,
             url=url,
             start_time=None,
@@ -144,7 +144,7 @@ class ezShareCPAP(QMainWindow):
             self.worker.stop()
             self.worker.wait()
 
-        self.worker = ezShareWorker(self.ezShare)
+        self.worker = ezShareWorker(self.ezshare)
         self.worker.progress.connect(self.update_progress)
         self.worker.status.connect(self.update_status)
         self.worker.finished.connect(self.process_finished)
