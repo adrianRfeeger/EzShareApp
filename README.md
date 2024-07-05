@@ -38,8 +38,8 @@ ezShareCPAP is a macOS program designed to download files from an [ez Share SD c
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/adrianrfeeger/EzShareCPAP.git
-   cd EzShareCPAP
+   git clone https://github.com/adrianrfeeger/ezShareCPAP.git
+   cd ezShareCPAP
    ```
 
 2. **Install the required packages:**
@@ -65,7 +65,7 @@ ezShareCPAP is a macOS program designed to download files from an [ez Share SD c
 2. **Compile the application:**
 
    ```bash
-   pyinstaller EzShareCPAP.spec
+   pyinstaller ezShareCPAP.spec
    ```
 
    - This will create a standalone executable in the `dist` folder.
@@ -110,14 +110,14 @@ The GUI manages the configuration settings directly, eliminating the need to man
 ## File Structure
 
 - `README.md`: This file, containing documentation for the project.
-- `EzShareCPAP.spec`: PyInstaller specification file for building the standalone application.
+- `ezShareCPAP.spec`: PyInstaller specification file for building the standalone application.
 - `icon.icns`: Icon file for the macOS application.
 - `requirements.txt`: Lists required Python packages for the project.
 - `config.ini`: Stores settings.
 - `main.py`: Entry point for the program.
 - `gui.py`: Handles the graphical user interface and configuration settings.
 - `ui_main.py`: Defines the gui styling.
-- `ezshare.py`: Manages Wi-Fi connection and file synchronisation.
+- `ezShare.py`: Manages Wi-Fi connection and file synchronisation.
 - `file_ops.py`: Manages file operations, including directory traversal and file downloading.
 - `wifi.py`: Handles Wi-Fi connections specific to macOS.
 
@@ -126,9 +126,9 @@ The GUI manages the configuration settings directly, eliminating the need to man
 ### Wi-Fi Connection Issues:
 
 - Verify the SSID and PSK in the GUI are correct. Default SSID is `ez Share`, and the default PSK is `88888888`.
-- Ensure the EzShare SD card/adapter is inserted into a powered-on device (e.g., CPAP) and within range of your computer (5-10 metres).
+- Ensure the ezShare SD card/adapter is inserted into a powered-on device (e.g., CPAP) and within range of your computer (5-10 metres).
 
 ### File Download Issues:
 
-- Confirm the URL in the GUI points to the correct EzShare SD card address.
+- Confirm the URL in the GUI points to the correct ezShare SD card address.
 - Ensure sufficient space is available in the local directory for file downloads.
