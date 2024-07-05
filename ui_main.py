@@ -274,6 +274,8 @@ class Ui_ezShareCPAP(object):
         self.retranslateUi(ezShareCPAP)
         QtCore.QMetaObject.connectSlotsByName(ezShareCPAP)
 
+        self.add_button_animations()
+
     def retranslateUi(self, ezShareCPAP):
         _translate = QtCore.QCoreApplication.translate
         ezShareCPAP.setWindowTitle(_translate("ezShareCPAP", "ezShareCPAP"))
@@ -290,3 +292,24 @@ class Ui_ezShareCPAP(object):
         self.cancelBtn.setText(_translate("ezShareCPAP", "Cancel"))
         self.quitBtn.setText(_translate("ezShareCPAP", "Quit"))
         self.statusLabel.setText(_translate("ezShareCPAP", "Ready."))
+
+    def add_button_animations(self):
+        self.button_colors = {
+            self.startBtn: ("rgb(51, 153, 102)", "rgb(41, 123, 82)"),
+            self.saveBtn: ("rgb(51, 102, 255)", "rgb(41, 82, 205)"),
+            self.defaultBtn: ("rgb(255, 153, 51)", "rgb(205, 123, 41)"),
+            self.cancelBtn: ("rgb(255, 51, 51)", "rgb(205, 41, 41)"),
+            self.quitBtn: ("rgb(128, 0, 128)", "rgb(102, 0, 102)")
+        }
+        buttons = [self.startBtn, self.saveBtn, self.defaultBtn, self.cancelBtn, self.quitBtn]
+        for button in buttons:
+            button.pressed.connect(lambda btn=button: self.darken_button(btn))
+            button.released.connect(lambda btn=button: self.restore_button(btn))
+
+    def darken_button(self, button):
+        original_color, darkened_color = self.button_colors[button]
+        button.setStyleSheet(f"background-color: {darkened_color}; color: white;")
+
+    def restore_button(self, button):
+        original_color, darkened_color = self.button_colors[button]
+        QtCore.QTimer.singleShot(100, lambda btn=button: btn.setStyleSheet(f"background-color: {original_color}; color: white;"))
