@@ -74,6 +74,7 @@ class ezShareCPAP(QMainWindow):
     def initUI(self):
         # Connect buttons to functions
         self.ui.pathBrowseBtn.clicked.connect(self.browse_path)
+        self.ui.pathField.mousePressEvent = self.open_path_location  # Override mouse press event
         self.ui.startBtn.clicked.connect(self.start_process)
         self.ui.saveBtn.clicked.connect(self.save_config)
         self.ui.defaultBtn.clicked.connect(self.restore_defaults)
@@ -81,7 +82,7 @@ class ezShareCPAP(QMainWindow):
         self.ui.quitBtn.clicked.connect(self.close_event_handler)
 
         # Set initial values from config
-        self.ui.pathEntry.setText(self.config['Settings']['path'])
+        self.ui.pathField.setText(self.config['Settings']['path'])
         self.ui.urlEntry.setText(self.config['Settings']['url'])
         self.ui.ssidEntry.setText(self.config['WiFi']['ssid'])
         self.ui.pskEntry.setText(self.config['WiFi']['psk'])
@@ -95,10 +96,16 @@ class ezShareCPAP(QMainWindow):
         options = dialog.options()
         directory = dialog.getExistingDirectory(self, "Select Directory", options=options)
         if directory:
-            self.ui.pathEntry.setText(directory)
+            self.ui.pathField.setText(directory)
+
+    def open_path_location(self, event):
+        path = self.ui.pathField.text()
+        expanded_path = expand_path(path)
+        if expanded_path.is_dir():
+            subprocess.run(['open', expanded_path])  # Use 'open' command to open the directory on macOS
 
     def start_process(self):
-        path = self.ui.pathEntry.text()
+        path = self.ui.pathField.text()
         url = self.ui.urlEntry.text()
         ssid = self.ui.ssidEntry.text()
         psk = self.ui.pskEntry.text()
@@ -234,7 +241,7 @@ class ezShareCPAP(QMainWindow):
         self.config.read(self.config_file)
 
     def save_config(self):
-        self.config['Settings']['path'] = self.ui.pathEntry.text()
+        self.config['Settings']['path'] = self.ui.pathField.text()
         self.config['Settings']['url'] = self.ui.urlEntry.text()
         self.config['WiFi']['ssid'] = self.ui.ssidEntry.text()
         self.config['WiFi']['psk'] = self.ui.pskEntry.text()
@@ -246,7 +253,7 @@ class ezShareCPAP(QMainWindow):
 
     def restore_defaults(self):
         self.config = self.default_config
-        self.ui.pathEntry.setText(self.config['Settings']['path'])
+        self.ui.pathField.setText(self.config["Settings"]["path"])
         self.ui.urlEntry.setText(self.config['Settings']['url'])
         self.ui.ssidEntry.setText(self.config['WiFi']['ssid'])
         self.ui.pskEntry.setText(self.config['WiFi']['psk'])

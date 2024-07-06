@@ -8,9 +8,11 @@ class Ui_ezShareCPAP(object):
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
-        
+        self.verticalLayout.setSpacing(10)  # Set uniform vertical spacing
+
         self.pathLayout = QtWidgets.QHBoxLayout()
         self.pathLayout.setObjectName("pathLayout")
+        self.pathLayout.setSpacing(10)  # Set uniform horizontal spacing
         self.pathLabel = QtWidgets.QLabel(parent=self.centralwidget)
         font = QtGui.QFont()
         font.setFamily("Geneva")
@@ -20,20 +22,24 @@ class Ui_ezShareCPAP(object):
         self.pathLabel.setFont(font)
         self.pathLabel.setObjectName("pathLabel")
         self.pathLayout.addWidget(self.pathLabel)
-        self.pathEntry = QtWidgets.QLineEdit(parent=self.centralwidget)
+        
+        self.pathField = QtWidgets.QLineEdit(parent=self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.pathEntry.sizePolicy().hasHeightForWidth())
-        self.pathEntry.setSizePolicy(sizePolicy)
-        self.pathEntry.setMinimumHeight(35)
+        sizePolicy.setHeightForWidth(self.pathField.sizePolicy().hasHeightForWidth())
+        self.pathField.setSizePolicy(sizePolicy)
+        self.pathField.setMinimumHeight(35)
         font = QtGui.QFont()
         font.setFamily("Andale Mono")
         font.setPointSize(14)
-        self.pathEntry.setFont(font)
-        self.pathEntry.setReadOnly(True)
-        self.pathEntry.setObjectName("pathEntry")
-        self.pathLayout.addWidget(self.pathEntry)
+        self.pathField.setFont(font)
+        self.pathField.setReadOnly(True)
+        self.pathField.setCursor(QtGui.QCursor(QtCore.Qt.CursorShape.PointingHandCursor))
+        self.pathField.setStyleSheet("")  # Remove any custom styling
+        self.pathField.setObjectName("pathField")
+        self.pathLayout.addWidget(self.pathField)
+        
         self.pathBrowseBtn = QtWidgets.QPushButton(parent=self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -45,12 +51,14 @@ class Ui_ezShareCPAP(object):
         font.setFamily("Geneva")
         font.setPointSize(14)
         self.pathBrowseBtn.setFont(font)
+        self.pathBrowseBtn.setStyleSheet("background-color: rgb(51, 102, 255); color: white;")
         self.pathBrowseBtn.setObjectName("pathBrowseBtn")
         self.pathLayout.addWidget(self.pathBrowseBtn)
         self.verticalLayout.addLayout(self.pathLayout)
         
         self.urlLayout = QtWidgets.QHBoxLayout()
         self.urlLayout.setObjectName("urlLayout")
+        self.urlLayout.setSpacing(10)  # Set uniform horizontal spacing
         self.urlLabel = QtWidgets.QLabel(parent=self.centralwidget)
         font = QtGui.QFont()
         font.setFamily("Geneva")
@@ -77,6 +85,7 @@ class Ui_ezShareCPAP(object):
         
         self.ssidLayout = QtWidgets.QHBoxLayout()
         self.ssidLayout.setObjectName("ssidLayout")
+        self.ssidLayout.setSpacing(10)  # Set uniform horizontal spacing
         self.ssidLabel = QtWidgets.QLabel(parent=self.centralwidget)
         font = QtGui.QFont()
         font.setFamily("Geneva")
@@ -103,6 +112,7 @@ class Ui_ezShareCPAP(object):
         
         self.pskLayout = QtWidgets.QHBoxLayout()
         self.pskLayout.setObjectName("pskLayout")
+        self.pskLayout.setSpacing(10)  # Set uniform horizontal spacing
         self.pskLabel = QtWidgets.QLabel(parent=self.centralwidget)
         font = QtGui.QFont()
         font.setFamily("Geneva")
@@ -169,7 +179,7 @@ class Ui_ezShareCPAP(object):
         font.setFamily("Geneva")
         font.setPointSize(14)
         self.startBtn.setFont(font)
-        self.startBtn.setStyleSheet("background-color: rgb(51, 153, 102); color: white;")
+        self.startBtn.setStyleSheet("background-color: rgb(51, 102, 255); color: white;")
         self.startBtn.setObjectName("startBtn")
         self.btnLayout.addWidget(self.startBtn)
         
@@ -199,7 +209,7 @@ class Ui_ezShareCPAP(object):
         font.setFamily("Geneva")
         font.setPointSize(14)
         self.defaultBtn.setFont(font)
-        self.defaultBtn.setStyleSheet("background-color: rgb(255, 153, 51); color: white;")
+        self.defaultBtn.setStyleSheet("background-color: rgb(51, 102, 255); color: white;")
         self.defaultBtn.setObjectName("defaultBtn")
         self.btnLayout.addWidget(self.defaultBtn)
         
@@ -214,7 +224,7 @@ class Ui_ezShareCPAP(object):
         font.setFamily("Geneva")
         font.setPointSize(14)
         self.cancelBtn.setFont(font)
-        self.cancelBtn.setStyleSheet("background-color: rgb(255, 51, 51); color: white;")
+        self.cancelBtn.setStyleSheet("background-color: rgb(51, 102, 255); color: white;")
         self.cancelBtn.setObjectName("cancelBtn")
         self.btnLayout.addWidget(self.cancelBtn)
         
@@ -229,7 +239,7 @@ class Ui_ezShareCPAP(object):
         font.setFamily("Geneva")
         font.setPointSize(14)
         self.quitBtn.setFont(font)
-        self.quitBtn.setStyleSheet("background-color: rgb(128, 0, 128); color: white;")
+        self.quitBtn.setStyleSheet("background-color: rgb(51, 102, 255); color: white;")
         self.quitBtn.setObjectName("quitBtn")
         self.btnLayout.addWidget(self.quitBtn)
         
@@ -295,13 +305,14 @@ class Ui_ezShareCPAP(object):
 
     def add_button_animations(self):
         self.button_colors = {
-            self.startBtn: ("rgb(51, 153, 102)", "rgb(41, 123, 82)"),
+            self.startBtn: ("rgb(51, 102, 255)", "rgb(41, 82, 205)"),
             self.saveBtn: ("rgb(51, 102, 255)", "rgb(41, 82, 205)"),
-            self.defaultBtn: ("rgb(255, 153, 51)", "rgb(205, 123, 41)"),
-            self.cancelBtn: ("rgb(255, 51, 51)", "rgb(205, 41, 41)"),
-            self.quitBtn: ("rgb(128, 0, 128)", "rgb(102, 0, 102)")
+            self.defaultBtn: ("rgb(51, 102, 255)", "rgb(41, 82, 205)"),
+            self.cancelBtn: ("rgb(51, 102, 255)", "rgb(41, 82, 205)"),
+            self.quitBtn: ("rgb(51, 102, 255)", "rgb(41, 82, 205)"),
+            self.pathBrowseBtn: ("rgb(51, 102, 255)", "rgb(41, 82, 205)")  # Added Browse button colors
         }
-        buttons = [self.startBtn, self.saveBtn, self.defaultBtn, self.cancelBtn, self.quitBtn]
+        buttons = [self.startBtn, self.saveBtn, self.defaultBtn, self.cancelBtn, self.quitBtn, self.pathBrowseBtn]
         for button in buttons:
             button.pressed.connect(lambda btn=button: self.darken_button(btn))
             button.released.connect(lambda btn=button: self.restore_button(btn))
