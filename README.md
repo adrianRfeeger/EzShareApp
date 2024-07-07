@@ -99,11 +99,9 @@ The GUI provides an easy way to configure and run the file synchronisation proce
 - **Cancel:** Cancels the current operation.
 - **Quit:** Closes the application.
 
-**Progress Bar:**  
-Displays the progress of the file synchronisation process.
+**Progress Bar:** Displays the progress of the file synchronisation process.
 
-**Status Label:**  
-Displays the current status of the application.
+**Status Label:** Displays the current status of the application.
 
 The GUI manages the configuration settings directly, eliminating the need to manually edit the `config.ini` file. Enter your settings in the GUI and click "Save Settings" to store them.
 
