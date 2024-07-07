@@ -138,9 +138,9 @@ The GUI manages the configuration settings directly, eliminating the need to man
 ### Permissions:
 If you encounter issues with automating OSCAR imports, ensure that ezShareCPAP has the necessary permissions enabled in macOS.
 
-- Open System Preferences.
-- Go to Security & Privacy.
-- Select Accessibility.
-- Ensure that ezShareCPAP is listed and enabled. If it is not listed, you can add it by clicking the + button and navigating to the ezShareCPAP application.
+1. Open System Preferences.
+2. Go to Security & Privacy.
+3. Select Accessibility.
+4. Ensure that ezShareCPAP is listed and enabled. If it is not listed, you can add it by clicking the + button and navigating to the ezShareCPAP application.
 
 This ensures that the application has the necessary permissions to interact with OSCAR.
