@@ -57,6 +57,7 @@ ezShareCPAP is a macOS program designed to download files from an [ez Share SD c
 
 1. **Activate the virtual environment:**
    ```bash
+   cd ezShareCPAP
    source venv/bin/activate
    ```
 2. **Install PyInstaller:**
