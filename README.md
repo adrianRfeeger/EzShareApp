@@ -80,17 +80,13 @@ ezShareCPAP is a macOS program designed to download files from an [ez Share SD c
 
 The GUI provides an easy way to configure and run the file synchronisation process.
 
-**Path:**  
-Specify the local directory where the files will be downloaded.
+**Path:**  Specify the local directory where the files will be downloaded.
 
-**URL:**  
-Specify the URL of the ez Share SD card.
+**URL:**  Specify the URL of the ez Share SD card.
 
-**Wi-Fi SSID:**  
-Specify the SSID of the ez Share Wi-Fi network. The default SSID is `ez Share`.
+**Wi-Fi SSID:**  Specify the SSID of the ez Share Wi-Fi network. The default SSID is `ez Share`.
 
-**Wi-Fi PSK:**  
-Specify the PSK (password) for the ez Share Wi-Fi network. The default PSK is `88888888`.
+**Wi-Fi PSK:**  Specify the PSK (password) for the ez Share Wi-Fi network. The default PSK is `88888888`.
 
 **Checkboxes:**
 - **Import with OSCAR after completion:** Automatically imports data into OSCAR after the synchronisation process is completed.
