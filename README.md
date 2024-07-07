@@ -93,6 +93,8 @@ Specify the PSK (password) for the ez Share Wi-Fi network. The default PSK is `8
 - **Quit after completion:** Automatically quits the application after the synchronisation process is completed.
 
 **Buttons:**
+- **Browse:** Selects the directory to download the files to.
+- **ez Share Config:** Opens the configuration page for the ez Share SD card in the default browser.
 - **Start:** Initiates the synchronisation process.
 - **Save Settings:** Saves the current settings to `config.ini`.
 - **Restore Defaults:** Restores the default settings.
@@ -132,3 +134,12 @@ The GUI manages the configuration settings directly, eliminating the need to man
 
 - Confirm the URL in the GUI points to the correct ezShare SD card address.
 - Ensure sufficient space is available in the local directory for file downloads.
+
+### Permissions:
+If you encounter issues with automating OSCAR imports or other functionalities that require accessibility permissions, ensure that ezShareCPAP has the necessary permissions enabled in macOS.
+
+- Open System Preferences.
+- Go to Security & Privacy.
+- Select Accessibility.
+- Ensure that ezShareCPAP is listed and enabled. If it is not listed, you can add it by clicking the + button and navigating to the ezShareCPAP application.
+This ensures that the application has the necessary permissions to automate tasks and interact with other applications like OSCAR.
