@@ -3,6 +3,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# Connect to the specified Wi-Fi network
 def connect_to_wifi(ezshare):
     get_interface_cmd = 'networksetup -listallhardwareports'
     try:
@@ -33,9 +34,11 @@ def connect_to_wifi(ezshare):
     ezshare.connection_id = ezshare.ssid
     ezshare.connected = True
 
+# Check if Wi-Fi is connected
 def wifi_connected(ezshare):
     return ezshare.connected
 
+# Disconnect from the Wi-Fi network
 def disconnect_from_wifi(ezshare):
     if ezshare.connection_id:
         ezshare.print(f'Disconnecting from {ezshare.connection_id}...')

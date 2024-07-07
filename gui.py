@@ -11,11 +11,13 @@ from ezshare import ezShare
 from wifi import connect_to_wifi, disconnect_from_wifi, wifi_connected
 from ui_main import Ui_ezShareCPAP
 
+# Utility to get the absolute path to a resource
 def resource_path(relative_path):
     """ Get the absolute path to a resource, works for dev and for PyInstaller """
     base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
     return os.path.join(base_path, relative_path)
 
+# Utility to expand a path
 def expand_path(path):
     try:
         expanded_path = pathlib.Path(path).expanduser()
@@ -23,6 +25,7 @@ def expand_path(path):
     except RuntimeError as e:
         raise
 
+# Worker thread for running the ezShare process
 class ezShareWorker(QThread):
     progress = pyqtSignal(int)
     status = pyqtSignal(str, str)  # Added second parameter for message type (info/error)
@@ -57,6 +60,7 @@ class ezShareWorker(QThread):
         disconnect_from_wifi(self.ezshare)  # Ensure Wi-Fi is disconnected when stopping
         self.ezshare.disconnect_from_wifi()
 
+# Main window class for the GUI
 class ezShareCPAP(QMainWindow):
     def __init__(self):
         super().__init__()

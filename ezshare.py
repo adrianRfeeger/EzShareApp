@@ -9,8 +9,10 @@ from requests import adapters
 from wifi import connect_to_wifi, disconnect_from_wifi, wifi_connected
 from file_ops import recursive_traversal, list_dir
 
+# Main class to manage EzShare operations
 class ezShare:
     def __init__(self):
+        # Initialize attributes with default values
         self.path = None
         self.url = None
         self.start_time = None
@@ -34,16 +36,14 @@ class ezShare:
         self.total_files = 0
         self.processed_files = 0
 
+    # Method to set parameters for the operation
     def set_params(self, path, url, start_time, show_progress, verbose,
                    overwrite, keep_old, ssid, psk, ignore, retries, connection_delay, debug):
-        if debug:
-            log_level = logging.DEBUG
-        elif verbose:
-            log_level = logging.INFO
-        else:
-            log_level = logging.WARN
+        # Configure logging level
+        log_level = logging.DEBUG if debug else logging.INFO if verbose else logging.WARN
         logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                             level=log_level)
+        # Set the attributes
         self.path = pathlib.Path(path).expanduser()
         self.url = url
         self.start_time = start_time
@@ -63,25 +63,31 @@ class ezShare:
         self.connection_delay = connection_delay
         self.session.mount('http://', adapters.HTTPAdapter(max_retries=self.retry))
 
+    # Set the progress callback function
     def set_progress_callback(self, callback):
         self.progress_callback = callback
 
+    # Set the status callback function
     def set_status_callback(self, callback):
         self.status_callback = callback
 
+    # Update progress by calling the callback function
     def update_progress(self, value):
         if self.progress_callback:
             self.progress_callback(value)
 
+    # Update status by calling the callback function
     def update_status(self, message):
         if self.status_callback:
             self.status_callback(message)
 
+    # Print status message and update status
     def print(self, message):
         if self.show_progress:
             print(message)
         self.update_status(message)
 
+    # Main method to run the file transfer process
     def run(self):
         self.update_status('Starting process...')
         try:
@@ -122,6 +128,7 @@ class ezShare:
             self.disconnect_from_wifi()
             self.update_status('Disconnected from Wi-Fi.')
 
+    # Recursively calculate the total number of files to be transferred
     def calculate_total_files(self, url, dir_path, overwrite):
         total_files = 0
         files, dirs = list_dir(self, url)
@@ -135,6 +142,7 @@ class ezShare:
             total_files += self.calculate_total_files(absolute_dir_url, new_dir_path, overwrite)
         return total_files
 
+    # Disconnect from Wi-Fi
     def disconnect_from_wifi(self):
         try:
             disconnect_from_wifi(self)
