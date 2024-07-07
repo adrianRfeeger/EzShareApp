@@ -136,7 +136,7 @@ The GUI manages the configuration settings directly, eliminating the need to man
 - Ensure sufficient space is available in the local directory for file downloads.
 
 ### Permissions:
-If you encounter issues with automating OSCAR imports or other functionalities that require accessibility permissions, ensure that ezShareCPAP has the necessary permissions enabled in macOS.
+If you encounter issues with automating OSCAR imports, ensure that ezShareCPAP has the necessary permissions enabled in macOS.
 
 - Open System Preferences.
 - Go to Security & Privacy.
