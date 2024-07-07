@@ -51,7 +51,7 @@ class Ui_ezShareCPAP(object):
         font.setFamily("Geneva")
         font.setPointSize(14)
         self.pathBrowseBtn.setFont(font)
-        self.pathBrowseBtn.setStyleSheet("background-color: rgb(51, 102, 255); color: white;")
+        self.pathBrowseBtn.setStyleSheet("background-color: #5eac24; color: white;")  # Green color
         self.pathBrowseBtn.setObjectName("pathBrowseBtn")
         self.pathLayout.addWidget(self.pathBrowseBtn)
         self.verticalLayout.addLayout(self.pathLayout)
@@ -108,6 +108,22 @@ class Ui_ezShareCPAP(object):
         self.ssidEntry.setFont(font)
         self.ssidEntry.setObjectName("ssidEntry")
         self.ssidLayout.addWidget(self.ssidEntry)
+        
+        self.ezShareConfigBtn = QtWidgets.QPushButton(parent=self.centralwidget)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ezShareConfigBtn.sizePolicy().hasHeightForWidth())
+        self.ezShareConfigBtn.setSizePolicy(sizePolicy)
+        self.ezShareConfigBtn.setMinimumHeight(35)
+        font = QtGui.QFont()
+        font.setFamily("Geneva")
+        font.setPointSize(14)
+        self.ezShareConfigBtn.setFont(font)
+        self.ezShareConfigBtn.setStyleSheet("background-color: #dd6b36; color: white;")
+        self.ezShareConfigBtn.setObjectName("ezShareConfigBtn")
+        self.ssidLayout.addWidget(self.ezShareConfigBtn)
+
         self.verticalLayout.addLayout(self.ssidLayout)
         
         self.pskLayout = QtWidgets.QHBoxLayout()
@@ -168,6 +184,7 @@ class Ui_ezShareCPAP(object):
         
         self.btnLayout = QtWidgets.QHBoxLayout()
         self.btnLayout.setObjectName("btnLayout")
+        
         self.startBtn = QtWidgets.QPushButton(parent=self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -179,7 +196,7 @@ class Ui_ezShareCPAP(object):
         font.setFamily("Geneva")
         font.setPointSize(14)
         self.startBtn.setFont(font)
-        self.startBtn.setStyleSheet("background-color: rgb(51, 102, 255); color: white;")
+        self.startBtn.setStyleSheet("background-color: #0e3878; color: white;")
         self.startBtn.setObjectName("startBtn")
         self.btnLayout.addWidget(self.startBtn)
         
@@ -194,7 +211,7 @@ class Ui_ezShareCPAP(object):
         font.setFamily("Geneva")
         font.setPointSize(14)
         self.saveBtn.setFont(font)
-        self.saveBtn.setStyleSheet("background-color: rgb(51, 102, 255); color: white;")
+        self.saveBtn.setStyleSheet("background-color: #0e3878; color: white;")
         self.saveBtn.setObjectName("saveBtn")
         self.btnLayout.addWidget(self.saveBtn)
         
@@ -209,7 +226,7 @@ class Ui_ezShareCPAP(object):
         font.setFamily("Geneva")
         font.setPointSize(14)
         self.defaultBtn.setFont(font)
-        self.defaultBtn.setStyleSheet("background-color: rgb(51, 102, 255); color: white;")
+        self.defaultBtn.setStyleSheet("background-color: #0e3878; color: white;")
         self.defaultBtn.setObjectName("defaultBtn")
         self.btnLayout.addWidget(self.defaultBtn)
         
@@ -224,7 +241,7 @@ class Ui_ezShareCPAP(object):
         font.setFamily("Geneva")
         font.setPointSize(14)
         self.cancelBtn.setFont(font)
-        self.cancelBtn.setStyleSheet("background-color: rgb(51, 102, 255); color: white;")
+        self.cancelBtn.setStyleSheet("background-color: #0e3878; color: white;")
         self.cancelBtn.setObjectName("cancelBtn")
         self.btnLayout.addWidget(self.cancelBtn)
         
@@ -239,7 +256,7 @@ class Ui_ezShareCPAP(object):
         font.setFamily("Geneva")
         font.setPointSize(14)
         self.quitBtn.setFont(font)
-        self.quitBtn.setStyleSheet("background-color: rgb(51, 102, 255); color: white;")
+        self.quitBtn.setStyleSheet("background-color: #0e3878; color: white;")
         self.quitBtn.setObjectName("quitBtn")
         self.btnLayout.addWidget(self.quitBtn)
         
@@ -301,18 +318,20 @@ class Ui_ezShareCPAP(object):
         self.defaultBtn.setText(_translate("ezShareCPAP", "Restore Defaults"))
         self.cancelBtn.setText(_translate("ezShareCPAP", "Cancel"))
         self.quitBtn.setText(_translate("ezShareCPAP", "Quit"))
+        self.ezShareConfigBtn.setText(_translate("ezShareCPAP", "ez Share Config"))
         self.statusLabel.setText(_translate("ezShareCPAP", "Ready."))
 
     def add_button_animations(self):
         self.button_colors = {
-            self.startBtn: ("rgb(51, 102, 255)", "rgb(41, 82, 205)"),
-            self.saveBtn: ("rgb(51, 102, 255)", "rgb(41, 82, 205)"),
-            self.defaultBtn: ("rgb(51, 102, 255)", "rgb(41, 82, 205)"),
-            self.cancelBtn: ("rgb(51, 102, 255)", "rgb(41, 82, 205)"),
-            self.quitBtn: ("rgb(51, 102, 255)", "rgb(41, 82, 205)"),
-            self.pathBrowseBtn: ("rgb(51, 102, 255)", "rgb(41, 82, 205)")  # Added Browse button colors
+            self.startBtn: ("#0e3878", "#0b2d5e"),
+            self.saveBtn: ("#0e3878", "#0b2d5e"),
+            self.defaultBtn: ("#0e3878", "#0b2d5e"),
+            self.cancelBtn: ("#0e3878", "#0b2d5e"),
+            self.quitBtn: ("#0e3878", "#0b2d5e"),
+            self.pathBrowseBtn: ("#5eac24", "#4a891c"),  # Green color
+            self.ezShareConfigBtn: ("#dd6b36", "#b5572b")  # Orange color
         }
-        buttons = [self.startBtn, self.saveBtn, self.defaultBtn, self.cancelBtn, self.quitBtn, self.pathBrowseBtn]
+        buttons = [self.startBtn, self.saveBtn, self.defaultBtn, self.cancelBtn, self.quitBtn, self.pathBrowseBtn, self.ezShareConfigBtn]
         for button in buttons:
             button.pressed.connect(lambda btn=button: self.darken_button(btn))
             button.released.connect(lambda btn=button: self.restore_button(btn))

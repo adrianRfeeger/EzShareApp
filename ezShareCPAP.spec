@@ -7,7 +7,14 @@ a = Analysis(
     pathex=['.'],
     binaries=[],
     datas=[('icon.icns', '.'), ('config.ini', '.')],
-    hiddenimports=[],
+    hiddenimports=[
+        'PyQt6',
+        'PyQt6.QtCore',
+        'PyQt6.QtGui',
+        'PyQt6.QtWidgets',
+        'PyQt6.QtNetwork',
+        'PyQt6.QtPrintSupport'
+    ],
     hookspath=[],
     runtime_hooks=[],
     excludes=[],
@@ -60,6 +67,5 @@ app = BUNDLE(
         'NSLocationWhenInUseUsageDescription': 'This application requires access to location information for to manage the WiFi network switching.',
         'NSAppleEventsUsageDescription': 'This application requires access to AppleEvents to automate OSCAR import.',
         'NSAccessibilityUsageDescription': 'This application requires access to Accessibility to automate OSCAR import.',
-    
     }
 )
