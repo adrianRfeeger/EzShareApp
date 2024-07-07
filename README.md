@@ -68,7 +68,7 @@ ezShareCPAP is a macOS program designed to download files from an [ez Share SD c
    pyinstaller ezShareCPAP.spec
    ```
 
-   - This will create a standalone executable in the `dist` folder.
+   - This will create a standalone executable in the `dist` folder, drag it into the Applications folder.
 
 ## Usage
 
