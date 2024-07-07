@@ -7,14 +7,7 @@ a = Analysis(
     pathex=['.'],
     binaries=[],
     datas=[('icon.icns', '.'), ('config.ini', '.')],
-    hiddenimports=[
-        'PyQt6',
-        'PyQt6.QtCore',
-        'PyQt6.QtGui',
-        'PyQt6.QtWidgets',
-        'PyQt6.QtNetwork',
-        'PyQt6.QtPrintSupport'
-    ],
+    hiddenimports=[],
     hookspath=[],
     runtime_hooks=[],
     excludes=[],
