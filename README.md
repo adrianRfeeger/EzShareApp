@@ -92,7 +92,7 @@ The GUI provides an easy way to configure and run the file synchronisation proce
 
 **Buttons:**
 - **Browse:** Selects the directory to download the files to.
-- **ez Share Config:** Opens the configuration page for the ez Share SD card in the default browser.
+- **ez Share Config:** Opens the configuration web page for the ez Share SD card.
 - **Start:** Initiates the synchronisation process.
 - **Save Settings:** Saves the current settings to `config.ini`.
 - **Restore Defaults:** Restores the default settings.
@@ -102,8 +102,6 @@ The GUI provides an easy way to configure and run the file synchronisation proce
 **Progress Bar:** Displays the progress of the file synchronisation process.
 
 **Status Label:** Displays the current status of the application.
-
-The GUI manages the configuration settings directly, eliminating the need to manually edit the `config.ini` file. Enter your settings in the GUI and click "Save Settings" to store them.
 
 ## File Structure
 
@@ -132,11 +130,9 @@ The GUI manages the configuration settings directly, eliminating the need to man
 - Ensure sufficient space is available in the local directory for file downloads.
 
 ### Permissions:
-If you encounter issues with automating OSCAR imports, ensure that ezShareCPAP has the necessary permissions enabled in macOS.
+If you encounter issues with automating OSCAR imports, ensure that ezShareCPAP has the necessary permissions enabled to interact with OSCAR.
 
 1. Open System Preferences.
 2. Go to Security & Privacy.
 3. Select Accessibility.
 4. Ensure that ezShareCPAP is listed and enabled. If it is not listed, you can add it by clicking the + button and navigating to the ezShareCPAP application.
-
-This ensures that the application has the necessary permissions to interact with OSCAR.
