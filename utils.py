@@ -50,12 +50,6 @@ def check_accessibility_access():
     return result.stdout.strip() == "true"
 
 def request_accessibility_access(parent):
-    script = '''
-    tell application "System Preferences"
-        reveal anchor "Privacy_Accessibility" of pane id "com.apple.preference.security"
-        activate
-    end tell
-    '''
-    subprocess.run(["osascript", "-e", script])
     QMessageBox.information(parent, 'Accessibility Access',
                             'Please enable accessibility access for this application in System Preferences.')
+    subprocess.run(["open", "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"])
