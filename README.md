@@ -116,7 +116,7 @@ The GUI provides an easy way to configure and run the file synchronisation proce
 - `ezshare.py`: Manages Wi-Fi connection and file synchronisation.
 - `file_ops.py`: Manages file operations, including directory traversal and file downloading.
 - `wifi.py`: Handles Wi-Fi connections specific to macOS.
-- `utils.py`: Utility functions for resource paths and permission checks.=
+- `utils.py`: Utility functions for resource paths and permission checks.
 - `worker.py`: Background worker thread for performing the sync process.
 
 ## Troubleshooting
