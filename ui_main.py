@@ -273,17 +273,6 @@ class Ui_ezShareCPAP(object):
         self.progressBar.setObjectName("progressBar")
         self.verticalLayout.addWidget(self.progressBar)
         
-        self.statusLabel = QtWidgets.QLabel(parent=self.centralwidget)
-        font = QtGui.QFont()
-        font.setFamily("Geneva")
-        font.setPointSize(14)
-        font.setBold(True)
-        font.setWeight(75)
-        self.statusLabel.setFont(font)
-        self.statusLabel.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        self.statusLabel.setObjectName("statusLabel")
-        self.verticalLayout.addWidget(self.statusLabel)
-        
         ezShareCPAP.setCentralWidget(self.centralwidget)
         self.actionStart = QtGui.QAction(parent=ezShareCPAP)
         self.actionStart.setObjectName("actionStart")
@@ -319,7 +308,6 @@ class Ui_ezShareCPAP(object):
         self.cancelBtn.setText(_translate("ezShareCPAP", "Cancel"))
         self.quitBtn.setText(_translate("ezShareCPAP", "Quit"))
         self.ezShareConfigBtn.setText(_translate("ezShareCPAP", "ez Share Config"))
-        self.statusLabel.setText(_translate("ezShareCPAP", "Ready."))
 
     def add_button_animations(self):
         self.button_colors = {
