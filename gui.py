@@ -175,7 +175,7 @@ class ezShareCPAP(QMainWindow):
         else:
             self.ui.statusLabel.setStyleSheet("")  # Reset to default color
         self.ui.statusLabel.setText(message)
-        if message_type != 'info':  # Start the timer only if the message type is not 'info'
+        if message_type == 'info' and not self.is_running:  # Only reset to "Ready." if not running
             self.status_timer.start(5000)  # Reset status to "Ready." after 5 seconds
 
     def reset_status(self):
@@ -183,13 +183,13 @@ class ezShareCPAP(QMainWindow):
             self.update_status('Ready.', 'info')
 
     def process_finished(self):
+        self.is_running = False  # Reset the flag when the process finishes
         self.update_status('Ready.', 'info')
         self.ui.progressBar.setValue(0)
         if self.ui.importOscarCheckbox.isChecked():
             self.import_cpap_data_with_oscar()
         if self.ui.quitCheckbox.isChecked():
             self.close()
-        self.is_running = False  # Reset the flag when the process finishes
 
     def import_cpap_data_with_oscar(self):
         script = '''
@@ -211,6 +211,7 @@ class ezShareCPAP(QMainWindow):
             self.worker.wait()  # Ensure the thread finishes properly
             self.ui.progressBar.setValue(0)
             self.update_status('Process cancelled.', 'info')
+        self.is_running = False  # Reset the flag when the process is cancelled
 
     def close_event_handler(self):
         if self.worker and self.worker.isRunning():
