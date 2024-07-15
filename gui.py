@@ -76,6 +76,7 @@ class ezShareCPAP(QMainWindow):
         self.status_timer = QTimer(self)
         self.status_timer.setSingleShot(True)
         self.status_timer.timeout.connect(self.reset_status)
+        self.is_running = False  # Track the status of the download process
 
     def initUI(self):
         # Connect buttons to functions
@@ -163,6 +164,7 @@ class ezShareCPAP(QMainWindow):
         self.worker.status.connect(self.update_status)
         self.worker.finished.connect(self.process_finished)
         self.worker.start()
+        self.is_running = True  # Set the flag to indicate the process is running
 
     def update_progress(self, value):
         self.ui.progressBar.setValue(value)
@@ -173,10 +175,12 @@ class ezShareCPAP(QMainWindow):
         else:
             self.ui.statusLabel.setStyleSheet("")  # Reset to default color
         self.ui.statusLabel.setText(message)
-        self.status_timer.start(5000)  # Reset status to "Ready." after 5 seconds
+        if message_type != 'info':  # Start the timer only if the message type is not 'info'
+            self.status_timer.start(5000)  # Reset status to "Ready." after 5 seconds
 
     def reset_status(self):
-        self.update_status('Ready.', 'info')
+        if not self.is_running:  # Only reset the status if the process is not running
+            self.update_status('Ready.', 'info')
 
     def process_finished(self):
         self.update_status('Ready.', 'info')
@@ -185,6 +189,7 @@ class ezShareCPAP(QMainWindow):
             self.import_cpap_data_with_oscar()
         if self.ui.quitCheckbox.isChecked():
             self.close()
+        self.is_running = False  # Reset the flag when the process finishes
 
     def import_cpap_data_with_oscar(self):
         script = '''

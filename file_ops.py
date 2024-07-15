@@ -69,7 +69,7 @@ def check_files(ezshare, files, url, dir_path: pathlib.Path, total_files, proces
 
         if download_file(ezshare, absolute_file_url, local_path, file_ts):
             processed_files += 1
-            ezshare.update_progress(int(processed_files / total_files * 100) if total_files else 0)
+            ezshare.update_progress(int((processed_files / total_files) * 100) if total_files else 0)
     return processed_files
 
 # Download the specified file
