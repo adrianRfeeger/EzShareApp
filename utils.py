@@ -1,7 +1,7 @@
 import os
 import subprocess
 import sys
-from PyQt6.QtWidgets import QFileDialog, QMessageBox
+from PySide6.QtWidgets import QFileDialog, QMessageBox
 
 def resource_path(relative_path):
     """ Get the absolute path to a resource, works for dev and for PyInstaller """

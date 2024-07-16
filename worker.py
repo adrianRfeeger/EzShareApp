@@ -1,10 +1,10 @@
-from PyQt6.QtCore import QThread, pyqtSignal
+from PySide6.QtCore import QThread, Signal
 from wifi import connect_to_wifi, disconnect_from_wifi
 
 class ezShareWorker(QThread):
-    progress = pyqtSignal(int)
-    status = pyqtSignal(str, str)  # Added second parameter for message type (info/error)
-    finished = pyqtSignal()
+    progress = Signal(int)
+    status = Signal(str, str)  # Added second parameter for message type (info/error)
+    finished = Signal()
 
     def __init__(self, ezshare):
         super().__init__()

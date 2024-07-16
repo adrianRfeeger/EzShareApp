@@ -1,6 +1,6 @@
-from PyQt6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QStatusBar
-from PyQt6.QtCore import QTimer
-from PyQt6.QtGui import QAction
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QStatusBar, QProgressBar
+from PySide6.QtCore import QTimer
+from PySide6.QtGui import QAction
 import os
 import pathlib
 import configparser
@@ -31,8 +31,11 @@ class ezShareCPAP(QMainWindow):
         self.accessibilityAction.triggered.connect(self.request_accessibility_access)
         toolsMenu.addAction(self.accessibilityAction)
         
-        # Status bar message
+        # Status bar message and progress bar
         self.statusBar().showMessage('Ready.')
+        self.progressBar = QProgressBar(self)
+        self.progressBar.setMaximumWidth(200)
+        self.statusBar().addPermanentWidget(self.progressBar)
 
         self.ui.pathBrowseBtn.clicked.connect(self.browse_path)
         self.ui.pathField.mousePressEvent = self.open_path_location  # Override mouse press event
@@ -62,7 +65,9 @@ class ezShareCPAP(QMainWindow):
                 'path': '~/Documents/CPAP_Data/SD_card',
                 'url': 'http://192.168.4.1/dir?dir=A:',
                 'accessibility_checked': 'false',
-                'accessibility_prompt_disabled': 'false'
+                'accessibility_prompt_disabled': 'false',
+                'import_oscar': 'false',
+                'quit_after_completion': 'false'
             }
             self.config['WiFi'] = {
                 'ssid': 'ez Share',
@@ -73,10 +78,11 @@ class ezShareCPAP(QMainWindow):
         self.config.read(self.config_file)
 
     def save_config(self):
+        self.config['Settings']['import_oscar'] = str(self.ui.importOscarCheckbox.isChecked())
+        self.config['Settings']['quit_after_completion'] = str(self.ui.quitCheckbox.isChecked())
         with open(self.config_file, 'w') as configfile:
             self.config.write(configfile)
-            self.update_status('Settings saved.', 'info')  # Add this line to update the status bar
-
+            self.update_status('Settings saved.', 'info')
 
     def request_permissions(self):
         ensure_disk_access(self.config['Settings']['path'], self)
@@ -127,6 +133,7 @@ class ezShareCPAP(QMainWindow):
         self.config['WiFi']['psk'] = psk
         self.config['Settings']['import_oscar'] = str(self.ui.importOscarCheckbox.isChecked())
         self.config['Settings']['quit_after_completion'] = str(self.ui.quitCheckbox.isChecked())
+        self.save_config()  # Save settings before starting the process
 
         self.ezshare = ezShare()
         self.ezshare.set_params(
@@ -157,7 +164,7 @@ class ezShareCPAP(QMainWindow):
         self.is_running = True  # Set the flag to indicate the process is running
 
     def update_progress(self, value):
-        self.ui.progressBar.setValue(value)
+        self.progressBar.setValue(value)
 
     def update_status(self, message, message_type='info'):
         current_status = self.statusBar().currentMessage()
@@ -176,7 +183,7 @@ class ezShareCPAP(QMainWindow):
 
     def process_finished(self):
         self.is_running = False  # Reset the flag when the process finishes
-        self.ui.progressBar.setValue(0)
+        self.progressBar.setValue(0)
         if self.ui.importOscarCheckbox.isChecked():
             self.import_cpap_data_with_oscar()
         if self.ui.quitCheckbox.isChecked():
@@ -202,15 +209,17 @@ class ezShareCPAP(QMainWindow):
         if self.worker and self.worker.isRunning():
             self.worker.stop()
             self.worker.wait()  # Ensure the thread finishes properly
-            self.ui.progressBar.setValue(0)
+            self.progressBar.setValue(0)
             self.update_status('Process cancelled.', 'info')
         self.is_running = False  # Reset the flag when the process is cancelled
+        if self.ezshare:
+            self.ezshare.disconnect_from_wifi()  # Ensure Wi-Fi is disconnected
 
     def close_event_handler(self):
         if self.worker and self.worker.isRunning():
             self.cancel_process()
         self.update_status('Ready.', 'info')
-        self.ui.progressBar.setValue(0)
+        self.progressBar.setValue(0)
         self.close()
 
     def ez_share_config(self):
@@ -275,7 +284,9 @@ class ezShareCPAP(QMainWindow):
             'path': '~/Documents/CPAP_Data/SD_card',
             'url': 'http://192.168.4.1/dir?dir=A:',
             'accessibility_checked': 'false',
-            'accessibility_prompt_disabled': 'false'
+            'accessibility_prompt_disabled': 'false',
+            'import_oscar': 'false',
+            'quit_after_completion': 'false'
         }
         self.config['WiFi'] = {
             'ssid': 'ez Share',
