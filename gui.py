@@ -1,13 +1,15 @@
-from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QStatusBar, QProgressBar
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QStatusBar, QProgressBar, QLabel
 from PySide6.QtCore import QTimer
-from PySide6.QtGui import QAction
 import os
 import pathlib
 import configparser
 import subprocess
+import time
+import requests
 from ui_main import Ui_ezShareCPAP
 from worker import ezShareWorker
-from utils import resource_path, ensure_disk_access, ensure_accessibility_access, request_accessibility_access
+from utils import resource_path, ensure_disk_access, request_accessibility_access, check_oscar_installed
+from wifi import connect_to_wifi, disconnect_from_wifi, wifi_connected
 from ezshare import ezShare
 
 class ezShareCPAP(QMainWindow):
@@ -19,18 +21,12 @@ class ezShareCPAP(QMainWindow):
         self.worker = None  # Initialize worker to None
         self.initUI()
         self.request_permissions()
+        self.check_oscar_installation(on_launch=True)  # Check for OSCAR installation on launch
 
     def initUI(self):
         self.ui = Ui_ezShareCPAP()
         self.ui.setupUi(self)
 
-        # Add menu for accessibility access
-        menubar = self.menuBar()
-        toolsMenu = menubar.addMenu('Tools')
-        self.accessibilityAction = QAction('Check Accessibility Access', self)
-        self.accessibilityAction.triggered.connect(self.request_accessibility_access)
-        toolsMenu.addAction(self.accessibilityAction)
-        
         # Status bar message and progress bar
         self.statusBar().showMessage('Ready.')
         self.progressBar = QProgressBar(self)
@@ -46,12 +42,19 @@ class ezShareCPAP(QMainWindow):
         self.ui.quitBtn.clicked.connect(self.close_event_handler)
         self.ui.ezShareConfigBtn.clicked.connect(self.ez_share_config)  # Connect ez Share Config button
 
+        # Connect menu actions
+        self.ui.actionLoad_Default.triggered.connect(self.restore_defaults)
+        self.ui.actionChange_Path.triggered.connect(self.browse_path)
+        self.ui.actionSave_Settings.triggered.connect(self.save_config)
+        self.ui.actionQuit.triggered.connect(self.close_event_handler)
+        self.ui.actionEz_Share_Config.triggered.connect(self.ez_share_config)
+        self.ui.actionCheck_Access_Oscar.triggered.connect(lambda: self.check_oscar_installation(on_launch=False))
+
         # Set initial values from config
         self.ui.pathField.setText(self.config['Settings'].get('path', '~/Documents/CPAP_Data/SD_card'))
         self.ui.urlEntry.setText(self.config['Settings'].get('url', 'http://192.168.4.1/dir?dir=A:'))
         self.ui.ssidEntry.setText(self.config['WiFi'].get('ssid', 'ez Share'))
         self.ui.pskEntry.setText(self.config['WiFi'].get('psk', '88888888'))
-        self.ui.importOscarCheckbox.setChecked(self.config['Settings'].getboolean('import_oscar', False))
         self.ui.quitCheckbox.setChecked(self.config['Settings'].getboolean('quit_after_completion', False))
 
         self.status_timer = QTimer(self)
@@ -86,8 +89,6 @@ class ezShareCPAP(QMainWindow):
 
     def request_permissions(self):
         ensure_disk_access(self.config['Settings']['path'], self)
-        if self.config['Settings'].get('accessibility_prompt_disabled', 'false') == 'false':
-            ensure_accessibility_access(self)
 
     def request_accessibility_access(self):
         request_accessibility_access(self)
@@ -294,10 +295,43 @@ class ezShareCPAP(QMainWindow):
         }
         self.save_config()
         self.load_config()
-        self.ui.pathField.setText(self.config['Settings']['path'])
-        self.ui.urlEntry.setText(self.config['Settings']['url'])
-        self.ui.ssidEntry.setText(self.config['WiFi']['ssid'])
-        self.ui.pskEntry.setText(self.config['WiFi']['psk'])
-        self.ui.importOscarCheckbox.setChecked(self.config['Settings'].getboolean('import_oscar', False))
-        self.ui.quitCheckbox.setChecked(self.config['Settings'].getboolean('quit_after_completion', False))
+        self.ui.pathField.setText(self.config['Settings'].get('path'))
+        self.ui.urlEntry.setText(self.config['Settings'].get('url'))
+        self.ui.ssidEntry.setText(self.config['WiFi'].get('ssid'))
+        self.ui.pskEntry.setText(self.config['WiFi'].get('psk'))
+        self.update_checkboxes()  # Update the checkboxes to reflect the restored defaults
         self.update_status('Settings have been restored to defaults.', 'info')
+
+    def update_checkboxes(self):
+        oscar_installed = check_oscar_installed()
+        self.ui.importOscarCheckbox.setChecked(self.config['Settings'].getboolean('import_oscar', False) and oscar_installed)
+        self.ui.importOscarCheckbox.setEnabled(oscar_installed)
+        self.ui.downloadOscarLink.setVisible(not oscar_installed)
+        self.ui.quitCheckbox.setChecked(self.config['Settings'].getboolean('quit_after_completion', False))
+
+    def check_oscar_installation(self, on_launch=True):
+        """Check if OSCAR is installed, and update the UI accordingly."""
+        oscar_installed = check_oscar_installed()
+        if oscar_installed:
+            self.ui.importOscarCheckbox.setEnabled(True)
+            self.ui.importOscarCheckbox.setChecked(self.config['Settings'].getboolean('import_oscar', False))
+            self.ui.downloadOscarLink.setVisible(False)
+            if not on_launch:
+                self.update_status('OSCAR is installed. Checking accessibility access...', 'info')
+                subprocess.run(["open", "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"])
+        else:
+            self.ui.importOscarCheckbox.setEnabled(False)
+            self.ui.importOscarCheckbox.setChecked(False)
+            self.ui.downloadOscarLink.setVisible(True)
+            if not on_launch:
+                msg = QMessageBox()
+                msg.setIcon(QMessageBox.Icon.Information)
+                msg.setWindowTitle('OSCAR Not Installed')
+                msg.setText("OSCAR is not currently installed. Would you like to download OSCAR?")
+                msg.setStandardButtons(QMessageBox.StandardButton.Ok | QMessageBox.StandardButton.Cancel)
+                msg.setDefaultButton(QMessageBox.StandardButton.Ok)
+                ret = msg.exec()
+                if ret == QMessageBox.StandardButton.Ok:
+                    subprocess.run(['open', 'https://www.sleepfiles.com/OSCAR/'])
+                else:
+                    self.update_status('OSCAR installation was not initiated.', 'info')

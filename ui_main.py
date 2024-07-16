@@ -36,7 +36,6 @@ class Ui_ezShareCPAP(object):
         self.pathField.setFont(font)
         self.pathField.setReadOnly(True)
         self.pathField.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.pathField.setStyleSheet("")  # Remove any custom styling
         self.pathField.setObjectName("pathField")
         self.pathLayout.addWidget(self.pathField)
         
@@ -51,7 +50,6 @@ class Ui_ezShareCPAP(object):
         font.setFamily("Geneva")
         font.setPointSize(14)
         self.pathBrowseBtn.setFont(font)
-        self.pathBrowseBtn.setStyleSheet("background-color: #5eac24; color: white;")  # Green color
         self.pathBrowseBtn.setObjectName("pathBrowseBtn")
         self.pathLayout.addWidget(self.pathBrowseBtn)
         self.verticalLayout.addLayout(self.pathLayout)
@@ -120,7 +118,6 @@ class Ui_ezShareCPAP(object):
         font.setFamily("Geneva")
         font.setPointSize(14)
         self.ezShareConfigBtn.setFont(font)
-        self.ezShareConfigBtn.setStyleSheet("background-color: #dd6b36; color: white;")
         self.ezShareConfigBtn.setObjectName("ezShareConfigBtn")
         self.ssidLayout.addWidget(self.ezShareConfigBtn)
 
@@ -154,6 +151,9 @@ class Ui_ezShareCPAP(object):
         self.pskLayout.addWidget(self.pskEntry)
         self.verticalLayout.addLayout(self.pskLayout)
         
+        self.oscarLayout = QtWidgets.QHBoxLayout()
+        self.oscarLayout.setObjectName("oscarLayout")
+        self.oscarLayout.setSpacing(10)  # Set uniform horizontal spacing
         self.importOscarCheckbox = QtWidgets.QCheckBox(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -166,8 +166,16 @@ class Ui_ezShareCPAP(object):
         font.setPointSize(14)
         self.importOscarCheckbox.setFont(font)
         self.importOscarCheckbox.setObjectName("importOscarCheckbox")
-        self.verticalLayout.addWidget(self.importOscarCheckbox)
+        self.oscarLayout.addWidget(self.importOscarCheckbox)
         
+        self.downloadOscarLink = QtWidgets.QLabel(self.centralwidget)
+        self.downloadOscarLink.setOpenExternalLinks(True)
+        self.downloadOscarLink.setText('<a href="https://www.sleepfiles.com/OSCAR/">Download OSCAR</a>')
+        self.downloadOscarLink.setAlignment(QtCore.Qt.AlignLeft)
+        self.oscarLayout.addWidget(self.downloadOscarLink)
+        
+        self.verticalLayout.addLayout(self.oscarLayout)
+
         self.quitCheckbox = QtWidgets.QCheckBox(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
@@ -196,7 +204,6 @@ class Ui_ezShareCPAP(object):
         font.setFamily("Geneva")
         font.setPointSize(14)
         self.startBtn.setFont(font)
-        self.startBtn.setStyleSheet("background-color: #0e3878; color: white;")
         self.startBtn.setObjectName("startBtn")
         self.btnLayout.addWidget(self.startBtn)
         
@@ -211,7 +218,6 @@ class Ui_ezShareCPAP(object):
         font.setFamily("Geneva")
         font.setPointSize(14)
         self.saveBtn.setFont(font)
-        self.saveBtn.setStyleSheet("background-color: #0e3878; color: white;")
         self.saveBtn.setObjectName("saveBtn")
         self.btnLayout.addWidget(self.saveBtn)
         
@@ -226,7 +232,6 @@ class Ui_ezShareCPAP(object):
         font.setFamily("Geneva")
         font.setPointSize(14)
         self.defaultBtn.setFont(font)
-        self.defaultBtn.setStyleSheet("background-color: #0e3878; color: white;")
         self.defaultBtn.setObjectName("defaultBtn")
         self.btnLayout.addWidget(self.defaultBtn)
         
@@ -241,7 +246,6 @@ class Ui_ezShareCPAP(object):
         font.setFamily("Geneva")
         font.setPointSize(14)
         self.cancelBtn.setFont(font)
-        self.cancelBtn.setStyleSheet("background-color: #0e3878; color: white;")
         self.cancelBtn.setObjectName("cancelBtn")
         self.btnLayout.addWidget(self.cancelBtn)
         
@@ -256,30 +260,43 @@ class Ui_ezShareCPAP(object):
         font.setFamily("Geneva")
         font.setPointSize(14)
         self.quitBtn.setFont(font)
-        self.quitBtn.setStyleSheet("background-color: #0e3878; color: white;")
         self.quitBtn.setObjectName("quitBtn")
         self.btnLayout.addWidget(self.quitBtn)
         
         self.verticalLayout.addLayout(self.btnLayout)
         
         ezShareCPAP.setCentralWidget(self.centralwidget)
-        self.actionStart = QtGui.QAction(ezShareCPAP)
-        self.actionStart.setObjectName("actionStart")
+
+        menubar = ezShareCPAP.menuBar()
+        self.menuSettings = menubar.addMenu('Settings')
+        self.menuTools = menubar.addMenu('Tools')
+
+        self.actionLoad_Default = QtGui.QAction(ezShareCPAP)
+        self.actionLoad_Default.setObjectName("actionLoad_Default")
+        self.menuSettings.addAction(self.actionLoad_Default)
+
+        self.actionChange_Path = QtGui.QAction(ezShareCPAP)
+        self.actionChange_Path.setObjectName("actionChange_Path")
+        self.menuSettings.addAction(self.actionChange_Path)
+
         self.actionSave_Settings = QtGui.QAction(ezShareCPAP)
         self.actionSave_Settings.setObjectName("actionSave_Settings")
-        self.actionRestore_Defaults = QtGui.QAction(ezShareCPAP)
-        self.actionRestore_Defaults.setObjectName("actionRestore_Defaults")
-        self.actionCancel = QtGui.QAction(ezShareCPAP)
-        self.actionCancel.setObjectName("actionCancel")
+        self.menuSettings.addAction(self.actionSave_Settings)
+
+        self.actionEz_Share_Config = QtGui.QAction(ezShareCPAP)
+        self.actionEz_Share_Config.setObjectName("actionEz_Share_Config")
+        self.menuTools.addAction(self.actionEz_Share_Config)
+
+        self.actionCheck_Access_Oscar = QtGui.QAction(ezShareCPAP)
+        self.actionCheck_Access_Oscar.setObjectName("actionCheck_Access_Oscar")
+        self.menuTools.addAction(self.actionCheck_Access_Oscar)
+
         self.actionQuit = QtGui.QAction(ezShareCPAP)
         self.actionQuit.setObjectName("actionQuit")
-        self.actionBrowse = QtGui.QAction(ezShareCPAP)
-        self.actionBrowse.setObjectName("actionBrowse")
+        self.menuTools.addAction(self.actionQuit)
 
         self.retranslateUi(ezShareCPAP)
         QtCore.QMetaObject.connectSlotsByName(ezShareCPAP)
-
-        self.add_button_animations()
 
     def retranslateUi(self, ezShareCPAP):
         _translate = QtCore.QCoreApplication.translate
@@ -297,26 +314,9 @@ class Ui_ezShareCPAP(object):
         self.cancelBtn.setText(_translate("ezShareCPAP", "Cancel"))
         self.quitBtn.setText(_translate("ezShareCPAP", "Quit"))
         self.ezShareConfigBtn.setText(_translate("ezShareCPAP", "ez Share Config"))
-
-    def add_button_animations(self):
-        self.button_colors = {
-            self.startBtn: ("#0e3878", "#0b2d5e"),
-            self.saveBtn: ("#0e3878", "#0b2d5e"),
-            self.defaultBtn: ("#0e3878", "#0b2d5e"),
-            self.cancelBtn: ("#0e3878", "#0b2d5e"),
-            self.quitBtn: ("#0e3878", "#0b2d5e"),
-            self.pathBrowseBtn: ("#5eac24", "#4a891c"),  # Green color
-            self.ezShareConfigBtn: ("#dd6b36", "#b5572b")  # Orange color
-        }
-        buttons = [self.startBtn, self.saveBtn, self.defaultBtn, self.cancelBtn, self.quitBtn, self.pathBrowseBtn, self.ezShareConfigBtn]
-        for button in buttons:
-            button.pressed.connect(lambda btn=button: self.darken_button(btn))
-            button.released.connect(lambda btn=button: self.restore_button(btn))
-
-    def darken_button(self, button):
-        original_color, darkened_color = self.button_colors[button]
-        button.setStyleSheet(f"background-color: {darkened_color}; color: white;")
-
-    def restore_button(self, button):
-        original_color, darkened_color = self.button_colors[button]
-        QtCore.QTimer.singleShot(100, lambda btn=button: btn.setStyleSheet(f"background-color: {original_color}; color: white;"))
+        self.actionLoad_Default.setText(_translate("ezShareCPAP", "Load Default"))
+        self.actionChange_Path.setText(_translate("ezShareCPAP", "Change Path"))
+        self.actionSave_Settings.setText(_translate("ezShareCPAP", "Save"))
+        self.actionEz_Share_Config.setText(_translate("ezShareCPAP", "ez Share Config"))
+        self.actionCheck_Access_Oscar.setText(_translate("ezShareCPAP", "Check access to Oscar"))
+        self.actionQuit.setText(_translate("ezShareCPAP", "Quit"))

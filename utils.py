@@ -35,21 +35,12 @@ def request_disk_access(parent):
     else:
         print("No directory selected")
 
-def ensure_accessibility_access(parent):
-    if not check_accessibility_access():
-        request_accessibility_access(parent)
-
-def check_accessibility_access():
-    script = '''
-    tell application "System Events"
-        set isEnabled to UI elements enabled
-    end tell
-    return isEnabled
-    '''
-    result = subprocess.run(["osascript", "-e", script], capture_output=True, text=True)
-    return result.stdout.strip() == "true"
-
 def request_accessibility_access(parent):
     QMessageBox.information(parent, 'Accessibility Access',
                             'Please enable accessibility access for this application in System Preferences.')
     subprocess.run(["open", "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility"])
+
+def check_oscar_installed():
+    """Check if OSCAR is installed on the system."""
+    oscar_installed = subprocess.run(["osascript", "-e", 'id of application "OSCAR"'], capture_output=True, text=True)
+    return oscar_installed.returncode == 0

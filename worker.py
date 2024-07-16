@@ -24,7 +24,7 @@ class ezShareWorker(QThread):
             self.finished.emit()
 
     def update_progress(self, value):
-        self.progress.emit(value)
+        self.progress.emit(min(max(0, value), 100))  # Ensure progress is between 0 and 100
 
     def update_status(self, message, message_type='info'):
         self.status.emit(message, message_type)
