@@ -137,5 +137,4 @@ If you encounter issues with automating OSCAR imports, ensure that ezShareCPAP h
    1. Choose Tools from the menu.
    2. Select 'Check access to OSCAR'
    3. Ensure that ezShareCPAP is listed and enabled. If it is not listed, you can add it by clicking the + button and navigating to the ezShareCPAP application.
-![image](https://github.com/user-attachments/assets/e1bc9aed-eeeb-4319-a156-e697db8064b4)
-
+![image](https://github.com/user-attachments/assets/f19834e3-1bd3-4ae0-b9b3-1487e423f3ce)
