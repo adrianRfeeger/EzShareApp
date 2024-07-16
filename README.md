@@ -31,7 +31,7 @@ ezShareCPAP is a macOS program designed to download files from an [ez Share SD c
 
 2. **Extract the ZIP file:**
 
-   - Unzip the downloaded file and move to a desired location on your macOS system (e.g., Applications folder).
+   - Unzip the downloaded file and move to the Applications folder.
 
 ### From Source
 
