@@ -134,8 +134,8 @@ The GUI provides an easy way to configure and run the file synchronisation proce
 ### Permissions:
 If you encounter issues with automating OSCAR imports, ensure that ezShareCPAP has the necessary permissions enabled to interact with OSCAR.
 
-   1. Open System Preferences.
-   2. Go to Security & Privacy.
-   3. Select Accessibility.
-   4. Ensure that ezShareCPAP is listed and enabled. If it is not listed, you can add it by clicking the + button and navigating to the ezShareCPAP application.
-![image](https://github.com/adrianRfeeger/ezShareCPAP/assets/139186297/c50d12ae-3372-4b30-957c-06ae8c1616b5)
+   1. Choose Tools from the menu.
+   2. Select 'Check access to OSCAR'
+   3. Ensure that ezShareCPAP is listed and enabled. If it is not listed, you can add it by clicking the + button and navigating to the ezShareCPAP application.
+![image](https://github.com/user-attachments/assets/e1bc9aed-eeeb-4319-a156-e697db8064b4)
+
