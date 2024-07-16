@@ -1,3 +1,4 @@
+# gui.py
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QStatusBar, QProgressBar, QLabel
 from PySide6.QtCore import QTimer
 import os
@@ -114,6 +115,8 @@ class ezShareCPAP(QMainWindow):
         ssid = self.ui.ssidEntry.text()
         psk = self.ui.pskEntry.text()
 
+        self.update_status('Checking Connections.', 'info')
+
         if not path or not url or not ssid:
             self.update_status('Input Error: All fields must be filled out.', 'error')
             return
@@ -134,7 +137,6 @@ class ezShareCPAP(QMainWindow):
         self.config['WiFi']['psk'] = psk
         self.config['Settings']['import_oscar'] = str(self.ui.importOscarCheckbox.isChecked())
         self.config['Settings']['quit_after_completion'] = str(self.ui.quitCheckbox.isChecked())
-        self.save_config()  # Save settings before starting the process
 
         self.ezshare = ezShare()
         self.ezshare.set_params(
@@ -157,6 +159,7 @@ class ezShareCPAP(QMainWindow):
             self.worker.stop()
             self.worker.wait()
 
+        self.disable_ui_elements()
         self.worker = ezShareWorker(self.ezshare)
         self.worker.progress.connect(self.update_progress)
         self.worker.status.connect(self.update_status)
@@ -184,6 +187,7 @@ class ezShareCPAP(QMainWindow):
 
     def process_finished(self):
         self.is_running = False  # Reset the flag when the process finishes
+        self.enable_ui_elements()
         self.progressBar.setValue(0)
         if self.ui.importOscarCheckbox.isChecked():
             self.import_cpap_data_with_oscar()
@@ -213,6 +217,7 @@ class ezShareCPAP(QMainWindow):
             self.progressBar.setValue(0)
             self.update_status('Process cancelled.', 'info')
         self.is_running = False  # Reset the flag when the process is cancelled
+        self.enable_ui_elements()
         if self.ezshare:
             self.ezshare.disconnect_from_wifi()  # Ensure Wi-Fi is disconnected
 
@@ -299,7 +304,8 @@ class ezShareCPAP(QMainWindow):
         self.ui.urlEntry.setText(self.config['Settings'].get('url'))
         self.ui.ssidEntry.setText(self.config['WiFi'].get('ssid'))
         self.ui.pskEntry.setText(self.config['WiFi'].get('psk'))
-        self.update_checkboxes()  # Update the checkboxes to reflect the restored defaults
+        self.ui.importOscarCheckbox.setChecked(False)
+        self.ui.quitCheckbox.setChecked(False)
         self.update_status('Settings have been restored to defaults.', 'info')
 
     def update_checkboxes(self):
@@ -335,3 +341,23 @@ class ezShareCPAP(QMainWindow):
                     subprocess.run(['open', 'https://www.sleepfiles.com/OSCAR/'])
                 else:
                     self.update_status('OSCAR installation was not initiated.', 'info')
+
+    def disable_ui_elements(self):
+        self.ui.pathBrowseBtn.setEnabled(False)
+        self.ui.startBtn.setEnabled(False)
+        self.ui.saveBtn.setEnabled(False)
+        self.ui.defaultBtn.setEnabled(False)
+        self.ui.quitBtn.setEnabled(False)
+        self.ui.ezShareConfigBtn.setEnabled(False)
+        self.ui.menuSettings.setEnabled(False)
+        self.ui.menuTools.setEnabled(False)
+
+    def enable_ui_elements(self):
+        self.ui.pathBrowseBtn.setEnabled(True)
+        self.ui.startBtn.setEnabled(True)
+        self.ui.saveBtn.setEnabled(True)
+        self.ui.defaultBtn.setEnabled(True)
+        self.ui.quitBtn.setEnabled(True)
+        self.ui.ezShareConfigBtn.setEnabled(True)
+        self.ui.menuSettings.setEnabled(True)
+        self.ui.menuTools.setEnabled(True)
