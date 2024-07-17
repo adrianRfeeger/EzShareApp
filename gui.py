@@ -9,7 +9,7 @@ import time
 import requests
 from ui_main import Ui_ezShareCPAP
 from worker import ezShareWorker
-from utils import resource_path, ensure_disk_access, request_accessibility_access, check_oscar_installed
+from utils import resource_path, ensure_disk_access, request_accessibility_access, check_oscar_installed, is_dark_mode, load_stylesheet
 from wifi import connect_to_wifi, disconnect_from_wifi, wifi_connected
 from ezshare import ezShare
 
@@ -62,6 +62,19 @@ class ezShareCPAP(QMainWindow):
         self.status_timer.setSingleShot(True)
         self.status_timer.timeout.connect(self.reset_status)
         self.is_running = False  # Track the status of the download process
+
+        self.apply_stylesheet()
+
+        self.dark_mode_timer = QTimer(self)
+        self.dark_mode_timer.timeout.connect(self.apply_stylesheet)
+        self.dark_mode_timer.start(5000)  # Check every 5 seconds
+
+    def apply_stylesheet(self):
+        if is_dark_mode():
+            stylesheet = load_stylesheet("style_dark.qss")
+        else:
+            stylesheet = load_stylesheet("style_light.qss")
+        self.setStyleSheet(stylesheet)
 
     def load_config(self):
         if not os.path.exists(self.config_file):
@@ -312,7 +325,7 @@ class ezShareCPAP(QMainWindow):
         oscar_installed = check_oscar_installed()
         self.ui.importOscarCheckbox.setChecked(self.config['Settings'].getboolean('import_oscar', False) and oscar_installed)
         self.ui.importOscarCheckbox.setEnabled(oscar_installed)
-        self.ui.downloadOscarLink.setVisible(not oscar_installed)
+        self.ui.downloadOscarLink.setVisible(oscar_installed)
         self.ui.quitCheckbox.setChecked(self.config['Settings'].getboolean('quit_after_completion', False))
 
     def check_oscar_installation(self, on_launch=True):

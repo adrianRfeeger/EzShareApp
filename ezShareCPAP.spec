@@ -6,7 +6,12 @@ a = Analysis(
     ['main.py'],
     pathex=['.'],
     binaries=[],
-    datas=[('icon.icns', '.'), ('config.ini', '.')],
+    datas=[
+        ('icon.icns', '.'), 
+        ('config.ini', '.'),
+        ('style_light.qss', '.'),
+        ('style_dark.qss', '.')
+        ],
     hiddenimports=[],
     hookspath=[],
     runtime_hooks=[],
@@ -51,7 +56,7 @@ app = BUNDLE(
         'CFBundleGetInfoString': 'ezShareCPAP',
         'CFBundleIdentifier': 'com.ezsharecpap',
         'CFBundleVersion': '1.0.1',
-        'CFBundleShortVersionString': '1.1.5',
+        'CFBundleShortVersionString': '1.x.x',
         'NSAppTransportSecurity': {
             'NSAllowsArbitraryLoads': True,
         },

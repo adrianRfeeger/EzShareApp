@@ -12,7 +12,8 @@ def is_dark_mode():
     except subprocess.CalledProcessError:
         return False
 
-def load_stylesheet(file_path):
+def load_stylesheet(file_name):
+    file_path = resource_path(file_name)
     with open(file_path, "r") as file:
         return file.read()
 
