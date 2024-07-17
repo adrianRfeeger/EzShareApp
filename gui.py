@@ -81,10 +81,10 @@ class ezShareCPAP(QMainWindow):
             self.config['Settings'] = {
                 'path': '~/Documents/CPAP_Data/SD_card',
                 'url': 'http://192.168.4.1/dir?dir=A:',
-                'accessibility_checked': 'false',
-                'accessibility_prompt_disabled': 'false',
-                'import_oscar': 'false',
-                'quit_after_completion': 'false'
+                'accessibility_checked': 'False',
+                'accessibility_prompt_disabled': 'False',
+                'import_oscar': 'False',
+                'quit_after_completion': 'False'
             }
             self.config['WiFi'] = {
                 'ssid': 'ez Share',
@@ -302,10 +302,10 @@ class ezShareCPAP(QMainWindow):
         self.config['Settings'] = {
             'path': '~/Documents/CPAP_Data/SD_card',
             'url': 'http://192.168.4.1/dir?dir=A:',
-            'accessibility_checked': 'false',
-            'accessibility_prompt_disabled': 'false',
-            'import_oscar': 'false',
-            'quit_after_completion': 'false'
+            'accessibility_checked': 'False',
+            'accessibility_prompt_disabled': 'False',
+            'import_oscar': 'False',
+            'quit_after_completion': 'False'
         }
         self.config['WiFi'] = {
             'ssid': 'ez Share',
