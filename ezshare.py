@@ -1,3 +1,4 @@
+# ezshare.py
 import pathlib
 import logging
 import sys
@@ -74,7 +75,9 @@ class ezShare:
     # Update progress by calling the callback function
     def update_progress(self, value):
         if self.progress_callback:
-            self.progress_callback(value)
+            # Ensure the progress value is clamped between 0 and 100
+            clamped_value = min(max(0, value), 100)
+            self.progress_callback(clamped_value)
 
     # Update status by calling the callback function
     def update_status(self, message):
