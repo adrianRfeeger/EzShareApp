@@ -1,5 +1,5 @@
 # gui.py
-from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QStatusBar, QProgressBar, QLabel
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QProgressBar
 from PySide6.QtCore import QTimer
 import os
 import pathlib
@@ -10,7 +10,7 @@ import requests
 from ui_main import Ui_ezShareCPAP
 from worker import ezShareWorker
 from utils import resource_path, ensure_disk_access, request_accessibility_access, check_oscar_installed, is_dark_mode, load_stylesheet
-from wifi import connect_to_wifi, disconnect_from_wifi, wifi_connected
+from wifi import connect_to_wifi, wifi_connected
 from ezshare import ezShare
 
 class ezShareCPAP(QMainWindow):
