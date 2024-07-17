@@ -3,6 +3,8 @@ file_ops.cpython-312.pyc
 gui.cpython-312.pyc
 ui_main.cpython-312.pyc
 wifi.cpython-312.pyc
+__pycache__/worker.cpython-312.pyc
+__pycache__/utils.cpython-312.pyc
 *.toc
 *.zip
 /build
