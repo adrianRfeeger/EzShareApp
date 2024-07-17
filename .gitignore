@@ -9,3 +9,4 @@ __pycache__/utils.cpython-312.pyc
 *.zip
 /build
 /dist
+.DS_Store
