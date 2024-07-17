@@ -51,7 +51,7 @@ app = BUNDLE(
         'CFBundleGetInfoString': 'ezShareCPAP',
         'CFBundleIdentifier': 'com.ezsharecpap',
         'CFBundleVersion': '1.0.1',
-        'CFBundleShortVersionString': '1.0.1',
+        'CFBundleShortVersionString': '1.1.5',
         'NSAppTransportSecurity': {
             'NSAllowsArbitraryLoads': True,
         },
