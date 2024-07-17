@@ -143,7 +143,7 @@ The GUI provides an easy way to configure and run the file synchronisation proce
 - Confirm the URL in the GUI points to the correct ezShare SD card address.
 - Ensure sufficient space is available in the local directory for file downloads.
 
-### Permissions:
+### Importing To Oscar:
 If you encounter issues with automating OSCAR imports, ensure that ezShareCPAP has the necessary permissions enabled to interact with OSCAR.
 
    1. Choose **Tools** from the menu.
