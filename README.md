@@ -110,6 +110,8 @@ The GUI provides an easy way to configure and run the file synchronisation proce
 - `icon.icns`: Icon file for the macOS application.
 - `requirements.txt`: Lists required Python packages for the project.
 - `config.ini`: Stores settings.
+- `style_light.qss`: Light mode styling.
+- `style_dark.qss`: Dark mode styling.
 - `main.py`: Entry point for the program.
 - `gui.py`: Handles the graphical user interface and configuration settings.
 - `ui_main.py`: Defines the gui styling.
