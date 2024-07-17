@@ -111,7 +111,7 @@ The GUI provides an easy way to configure and run the file synchronisation proce
 -   **Tools:**
     -   **ez Share Config:** Opens the configuration web page for the ez Share SD card.
     -   **Check access to Oscar:** Opens the settings for Privacy & Secuirty - Accessibility.
--   **Quit:** Closes the application.
+-   **Quit ezShareCPAP:** Closes the application.
   
 ## File Structure
 
