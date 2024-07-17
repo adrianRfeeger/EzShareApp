@@ -318,5 +318,5 @@ class Ui_ezShareCPAP(object):
         self.actionChange_Path.setText(_translate("ezShareCPAP", "Change Path"))
         self.actionSave_Settings.setText(_translate("ezShareCPAP", "Save"))
         self.actionEz_Share_Config.setText(_translate("ezShareCPAP", "ez Share Config"))
-        self.actionCheck_Access_Oscar.setText(_translate("ezShareCPAP", "Check access to Oscar"))
+        self.actionCheck_Access_Oscar.setText(_translate("ezShareCPAP", "Check Access To Oscar"))
         self.actionQuit.setText(_translate("ezShareCPAP", "Quit"))
