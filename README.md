@@ -104,14 +104,13 @@ The GUI provides an easy way to configure and run the file synchronisation proce
 **Status Bar:** Displays the current status of the application.
 
 **Menu:**
-
 -   **Settings:**
     -   **Load Default:** Restores the default settings.
     -   **Change Path:** Opens a dialog to change the directory path.
     -   **Save Settings:** Saves the current settings to `config.ini`.
 -   **Tools:**
     -   **ez Share Config:** Opens the configuration web page for the ez Share SD card.
-    -   **Check access to Oscar:** Checks if OSCAR is installed and accessible.
+    -   **Check access to Oscar:** Opens the settings for Privacy & Secuirty - Accessibility Options.
 -   **Quit:** Closes the application.
   
 ## File Structure
