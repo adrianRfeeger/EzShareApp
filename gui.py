@@ -1,6 +1,6 @@
 # gui.py
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QProgressBar
-from PySide6.QtCore import QTimer
+from PySide6.QtCore import QTimer, QSize, QPoint
 import os
 import pathlib
 import configparser
@@ -27,6 +27,10 @@ class ezShareCPAP(QMainWindow):
     def initUI(self):
         self.ui = Ui_ezShareCPAP()
         self.ui.setupUi(self)
+
+        # Restore window size and position from config
+        self.resize(QSize(int(self.config['Window'].get('width', '800')), int(self.config['Window'].get('height', '600'))))
+        self.move(QPoint(int(self.config['Window'].get('x', '100')), int(self.config['Window'].get('y', '100'))))
 
         # Status bar message and progress bar
         self.statusBar().showMessage('Ready.')
@@ -90,13 +94,31 @@ class ezShareCPAP(QMainWindow):
                 'ssid': 'ez Share',
                 'psk': '88888888'
             }
+            self.config['Window'] = {
+                'width': '800',
+                'height': '600',
+                'x': '100',
+                'y': '100'
+            }
             with open(self.config_file, 'w') as configfile:
                 self.config.write(configfile)
         self.config.read(self.config_file)
+        if 'Window' not in self.config:
+            self.config['Window'] = {
+                'width': '800',
+                'height': '600',
+                'x': '100',
+                'y': '100'
+            }
 
     def save_config(self):
         self.config['Settings']['import_oscar'] = str(self.ui.importOscarCheckbox.isChecked())
         self.config['Settings']['quit_after_completion'] = str(self.ui.quitCheckbox.isChecked())
+        # Save window size and position
+        self.config['Window']['width'] = str(self.size().width())
+        self.config['Window']['height'] = str(self.size().height())
+        self.config['Window']['x'] = str(self.pos().x())
+        self.config['Window']['y'] = str(self.pos().y())
         with open(self.config_file, 'w') as configfile:
             self.config.write(configfile)
             self.update_status('Settings saved.', 'info')
@@ -310,6 +332,12 @@ class ezShareCPAP(QMainWindow):
         self.config['WiFi'] = {
             'ssid': 'ez Share',
             'psk': '88888888'
+        }
+        self.config['Window'] = {
+            'width': '800',
+            'height': '600',
+            'x': '100',
+            'y': '100'
         }
         self.save_config()
         self.load_config()
