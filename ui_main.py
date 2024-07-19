@@ -51,7 +51,7 @@ class Ui_ezShareCPAP(object):
         font.setPointSize(14)
         self.pathBrowseBtn.setFont(font)
         self.pathBrowseBtn.setObjectName("pathBrowseBtn")
-        self.pathLayout.addWidget(self.pathBrowseBtn)
+        self.pathLayout.addWidget(self.pathBrowseBtn, 0, QtCore.Qt.AlignTop)
         self.verticalLayout.addLayout(self.pathLayout)
         
         self.urlLayout = QtWidgets.QHBoxLayout()
@@ -119,7 +119,7 @@ class Ui_ezShareCPAP(object):
         font.setPointSize(14)
         self.ezShareConfigBtn.setFont(font)
         self.ezShareConfigBtn.setObjectName("ezShareConfigBtn")
-        self.ssidLayout.addWidget(self.ezShareConfigBtn)
+        self.ssidLayout.addWidget(self.ezShareConfigBtn, 0, QtCore.Qt.AlignTop)
 
         self.verticalLayout.addLayout(self.ssidLayout)
         
