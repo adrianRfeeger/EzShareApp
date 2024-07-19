@@ -120,7 +120,6 @@ class Ui_ezShareCPAP(object):
         self.ezShareConfigBtn.setFont(font)
         self.ezShareConfigBtn.setObjectName("ezShareConfigBtn")
         self.ssidLayout.addWidget(self.ezShareConfigBtn, 0, QtCore.Qt.AlignCenter)
-
         self.verticalLayout.addLayout(self.ssidLayout)
         
         self.pskLayout = QtWidgets.QHBoxLayout()
@@ -150,11 +149,20 @@ class Ui_ezShareCPAP(object):
         self.pskEntry.setObjectName("pskEntry")
         self.pskLayout.addWidget(self.pskEntry)
         self.verticalLayout.addLayout(self.pskLayout)
-        
-        self.oscarLayout = QtWidgets.QHBoxLayout()
-        self.oscarLayout.setObjectName("oscarLayout")
-        self.oscarLayout.setSpacing(10)  # Set uniform horizontal spacing
-        self.importOscarCheckbox = QtWidgets.QCheckBox(self.centralwidget)
+
+        # Horizontal layout for group boxes
+        self.groupBoxLayout = QtWidgets.QHBoxLayout()
+        self.groupBoxLayout.setObjectName("groupBoxLayout")
+        self.groupBoxLayout.setSpacing(10)  # Set uniform horizontal spacing
+
+        # Group Box for "On Completion"
+        self.onCompletionGroupBox = QtWidgets.QGroupBox(self.centralwidget)
+        self.onCompletionGroupBox.setObjectName("onCompletionGroupBox")
+        self.onCompletionLayout = QtWidgets.QVBoxLayout(self.onCompletionGroupBox)
+        self.onCompletionLayout.setObjectName("onCompletionLayout")
+        self.onCompletionLayout.setSpacing(10)  # Set uniform vertical spacing
+
+        self.importOscarCheckbox = QtWidgets.QCheckBox(self.onCompletionGroupBox)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -166,17 +174,17 @@ class Ui_ezShareCPAP(object):
         font.setPointSize(14)
         self.importOscarCheckbox.setFont(font)
         self.importOscarCheckbox.setObjectName("importOscarCheckbox")
-        self.oscarLayout.addWidget(self.importOscarCheckbox)
+        self.importOscarCheckbox.setStyleSheet("background-color: transparent;")
+        self.onCompletionLayout.addWidget(self.importOscarCheckbox)
         
-        self.downloadOscarLink = QtWidgets.QLabel(self.centralwidget)
+        self.downloadOscarLink = QtWidgets.QLabel(self.onCompletionGroupBox)
         self.downloadOscarLink.setOpenExternalLinks(True)
         self.downloadOscarLink.setText('<a href="https://www.sleepfiles.com/OSCAR/">Download OSCAR</a>')
         self.downloadOscarLink.setAlignment(QtCore.Qt.AlignLeft)
-        self.oscarLayout.addWidget(self.downloadOscarLink)
-        
-        self.verticalLayout.addLayout(self.oscarLayout)
+        self.downloadOscarLink.setStyleSheet("background-color: transparent;")
+        self.onCompletionLayout.addWidget(self.downloadOscarLink)
 
-        self.quitCheckbox = QtWidgets.QCheckBox(self.centralwidget)
+        self.quitCheckbox = QtWidgets.QCheckBox(self.onCompletionGroupBox)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -188,8 +196,50 @@ class Ui_ezShareCPAP(object):
         font.setPointSize(14)
         self.quitCheckbox.setFont(font)
         self.quitCheckbox.setObjectName("quitCheckbox")
-        self.verticalLayout.addWidget(self.quitCheckbox)
+        self.quitCheckbox.setStyleSheet("background-color: transparent;")
+        self.onCompletionLayout.addWidget(self.quitCheckbox)
+
+        self.groupBoxLayout.addWidget(self.onCompletionGroupBox)
+
+        # Group Box for "Settings"
+        self.settingsGroupBox = QtWidgets.QGroupBox(self.centralwidget)
+        self.settingsGroupBox.setObjectName("settingsGroupBox")
+        self.settingsLayout = QtWidgets.QVBoxLayout(self.settingsGroupBox)
+        self.settingsLayout.setObjectName("settingsLayout")
+        self.settingsLayout.setSpacing(10)  # Set uniform vertical spacing
+
+        self.saveBtn = QtWidgets.QPushButton(self.settingsGroupBox)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.saveBtn.sizePolicy().hasHeightForWidth())
+        self.saveBtn.setSizePolicy(sizePolicy)
+        self.saveBtn.setMinimumHeight(35)
+        font = QtGui.QFont()
+        font.setFamily("Geneva")
+        font.setPointSize(14)
+        self.saveBtn.setFont(font)
+        self.saveBtn.setObjectName("saveBtn")
+        self.settingsLayout.addWidget(self.saveBtn)
         
+        self.defaultBtn = QtWidgets.QPushButton(self.settingsGroupBox)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.defaultBtn.sizePolicy().hasHeightForWidth())
+        self.defaultBtn.setSizePolicy(sizePolicy)
+        self.defaultBtn.setMinimumHeight(35)
+        font = QtGui.QFont()
+        font.setFamily("Geneva")
+        font.setPointSize(14)
+        self.defaultBtn.setFont(font)
+        self.defaultBtn.setObjectName("defaultBtn")
+        self.settingsLayout.addWidget(self.defaultBtn)
+
+        self.groupBoxLayout.addWidget(self.settingsGroupBox)
+
+        self.verticalLayout.addLayout(self.groupBoxLayout)
+
         self.btnLayout = QtWidgets.QHBoxLayout()
         self.btnLayout.setObjectName("btnLayout")
         
@@ -206,34 +256,6 @@ class Ui_ezShareCPAP(object):
         self.startBtn.setFont(font)
         self.startBtn.setObjectName("startBtn")
         self.btnLayout.addWidget(self.startBtn)
-        
-        self.saveBtn = QtWidgets.QPushButton(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.saveBtn.sizePolicy().hasHeightForWidth())
-        self.saveBtn.setSizePolicy(sizePolicy)
-        self.saveBtn.setMinimumHeight(35)
-        font = QtGui.QFont()
-        font.setFamily("Geneva")
-        font.setPointSize(14)
-        self.saveBtn.setFont(font)
-        self.saveBtn.setObjectName("saveBtn")
-        self.btnLayout.addWidget(self.saveBtn)
-        
-        self.defaultBtn = QtWidgets.QPushButton(self.centralwidget)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.defaultBtn.sizePolicy().hasHeightForWidth())
-        self.defaultBtn.setSizePolicy(sizePolicy)
-        self.defaultBtn.setMinimumHeight(35)
-        font = QtGui.QFont()
-        font.setFamily("Geneva")
-        font.setPointSize(14)
-        self.defaultBtn.setFont(font)
-        self.defaultBtn.setObjectName("defaultBtn")
-        self.btnLayout.addWidget(self.defaultBtn)
         
         self.cancelBtn = QtWidgets.QPushButton(self.centralwidget)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
@@ -303,14 +325,16 @@ class Ui_ezShareCPAP(object):
         ezShareCPAP.setWindowTitle(_translate("ezShareCPAP", "ezShareCPAP"))
         self.pathLabel.setText(_translate("ezShareCPAP", "Path:"))
         self.pathBrowseBtn.setText(_translate("ezShareCPAP", "Browse"))
-        self.urlLabel.setText(_translate("ezShareCPAP", "URL:"))
+        self.urlLabel.setText(_translate("ezShareCPAP", "URL: "))
         self.ssidLabel.setText(_translate("ezShareCPAP", "WiFi SSID:"))
-        self.pskLabel.setText(_translate("ezShareCPAP", "WiFi PSK:"))
+        self.pskLabel.setText(_translate("ezShareCPAP", "WiFi PSK: "))
+        self.onCompletionGroupBox.setTitle(_translate("ezShareCPAP", "On Completion"))
         self.importOscarCheckbox.setText(_translate("ezShareCPAP", "Import with OSCAR after completion"))
         self.quitCheckbox.setText(_translate("ezShareCPAP", "Quit after completion"))
+        self.settingsGroupBox.setTitle(_translate("ezShareCPAP", "Settings"))
+        self.saveBtn.setText(_translate("ezShareCPAP", "Save"))
+        self.defaultBtn.setText(_translate("ezShareCPAP", "Defaults"))
         self.startBtn.setText(_translate("ezShareCPAP", "Start"))
-        self.saveBtn.setText(_translate("ezShareCPAP", "Save Settings"))
-        self.defaultBtn.setText(_translate("ezShareCPAP", "Restore Defaults"))
         self.cancelBtn.setText(_translate("ezShareCPAP", "Cancel"))
         self.quitBtn.setText(_translate("ezShareCPAP", "Quit"))
         self.ezShareConfigBtn.setText(_translate("ezShareCPAP", "ez Share Config"))
