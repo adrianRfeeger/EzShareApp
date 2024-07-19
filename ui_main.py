@@ -329,7 +329,7 @@ class Ui_ezShareCPAP(object):
         self.ssidLabel.setText(_translate("ezShareCPAP", "WiFi SSID:"))
         self.pskLabel.setText(_translate("ezShareCPAP", "WiFi PSK: "))
         self.onCompletionGroupBox.setTitle(_translate("ezShareCPAP", "On Completion"))
-        self.importOscarCheckbox.setText(_translate("ezShareCPAP", "Import with OSCAR"))
+        self.importOscarCheckbox.setText(_translate("ezShareCPAP", "Import With OSCAR"))
         self.quitCheckbox.setText(_translate("ezShareCPAP", "Quit"))
         self.settingsGroupBox.setTitle(_translate("ezShareCPAP", "Settings"))
         self.saveBtn.setText(_translate("ezShareCPAP", "Save"))
