@@ -38,7 +38,7 @@ class Ui_ezShareCPAP(object):
             QLabel {
                 border: 1px solid #d1d1d1;
                 padding: 5px;
-                border-radius: 4px;
+                border-radius: 8px;
                 background-color: white;
             }
         """)
