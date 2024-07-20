@@ -1,5 +1,4 @@
-# gui.py
-from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QProgressBar
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QProgressBar, QLabel
 from PySide6.QtCore import QTimer, QSize, QPoint
 import os
 import pathlib
@@ -47,6 +46,9 @@ class ezShareCPAP(QMainWindow):
         self.ui.quitBtn.clicked.connect(self.close_event_handler)
         self.ui.ezShareConfigBtn.clicked.connect(self.ez_share_config)  # Connect ez Share Config button
 
+        # Ensure the text for ezShareConfigBtn is properly set
+        self.ui.ezShareConfigBtn.setText("ez Share Config")
+
         # Connect menu actions
         self.ui.actionLoad_Default.triggered.connect(self.restore_defaults)
         self.ui.actionChange_Path.triggered.connect(self.browse_path)
@@ -56,7 +58,7 @@ class ezShareCPAP(QMainWindow):
         self.ui.actionCheck_Access_Oscar.triggered.connect(lambda: self.check_oscar_installation(on_launch=False))
 
         # Set initial values from config
-        self.ui.pathField.setText(self.config['Settings'].get('path', '~/Documents/CPAP_Data/SD_card'))
+        self.update_path_label(self.config['Settings'].get('path', '~/Documents/CPAP_Data/SD_card'))
         self.ui.urlEntry.setText(self.config['Settings'].get('url', 'http://192.168.4.1/dir?dir=A:'))
         self.ui.ssidEntry.setText(self.config['WiFi'].get('ssid', 'ez Share'))
         self.ui.pskEntry.setText(self.config['WiFi'].get('psk', '88888888'))
@@ -136,16 +138,35 @@ class ezShareCPAP(QMainWindow):
         options = dialog.options()
         directory = dialog.getExistingDirectory(self, "Select Directory", options=options)
         if directory:
-            self.ui.pathField.setText(directory)
+            short_path = self.convert_to_short_path(directory)
+            self.config['Settings']['path'] = short_path
+            self.update_path_label(short_path)
+
+    def convert_to_short_path(self, full_path):
+        home_dir = str(pathlib.Path.home())
+        if full_path.startswith(home_dir):
+            return full_path.replace(home_dir, '~', 1)
+        return full_path
+
+    def update_path_label(self, path):
+        self.ui.pathField.setText(path)
+        self.ui.pathField.setStyleSheet("""
+            QLabel {
+                border: 1px solid #d1d1d1;
+                padding: 5px;
+                border-radius: 4px;
+                background-color: white;
+            }
+        """)
 
     def open_path_location(self, event):
-        path = self.ui.pathField.text()
+        path = self.config['Settings']['path']
         expanded_path = pathlib.Path(path).expanduser()
         if expanded_path.is_dir():
             subprocess.run(['open', expanded_path])  # Use 'open' command to open the directory on macOS
 
     def start_process(self):
-        path = self.ui.pathField.text()
+        path = self.config['Settings']['path']
         url = self.ui.urlEntry.text()
         ssid = self.ui.ssidEntry.text()
         psk = self.ui.pskEntry.text()
@@ -341,7 +362,7 @@ class ezShareCPAP(QMainWindow):
         }
         self.save_config()
         self.load_config()
-        self.ui.pathField.setText(self.config['Settings'].get('path'))
+        self.update_path_label(self.config['Settings'].get('path'))
         self.ui.urlEntry.setText(self.config['Settings'].get('url'))
         self.ui.ssidEntry.setText(self.config['WiFi'].get('ssid'))
         self.ui.pskEntry.setText(self.config['WiFi'].get('psk'))
