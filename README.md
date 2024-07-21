@@ -1,5 +1,5 @@
 # ezShareCPAP
-![image](https://github.com/user-attachments/assets/93cc4218-2935-4b1f-9adc-0c7c0f0ed966)
+![image](https://github.com/user-attachments/assets/96adfe59-eb39-44fb-9764-2406380cc819)
 
 ## Overview
 
@@ -87,15 +87,15 @@ The GUI provides an easy way to configure and run the file synchronisation proce
 - **Wi-Fi PSK:**  The PSK (password) for the ez Share Wi-Fi network. The default PSK is `88888888`.
 
 **Checkboxes:**
-- **Import with OSCAR after completion:** Automatically imports data into OSCAR after the synchronisation process is completed.
-- **Quit after completion:** Automatically quits the application after the synchronisation process is completed.
+- **Import With OSCAR:** Automatically imports data into OSCAR after the synchronisation process is completed.
+- **Quit:** Automatically quits the application after the synchronisation process is completed.
 
 **Buttons:**
 - **Browse:** Selects the directory to download the files to.
 - **ez Share Config:** Opens the configuration web page for the ez Share SD card.
 - **Start:** Initiates the synchronisation process.
-- **Save Settings:** Saves the current settings to `config.ini`.
-- **Restore Defaults:** Restores the default settings.
+- **Save:** Saves the current settings to `config.ini`.
+- **Defaults:** Restores the default settings.
 - **Cancel:** Cancels the current operation.
 - **Quit:** Closes the application.
 
@@ -151,5 +151,3 @@ If you encounter issues with automating OSCAR imports, ensure that ezShareCPAP h
    3. Ensure that ezShareCPAP is listed and enabled. If it is not listed, you can add it by clicking the '**+**' button and navigating to the ezShareCPAP application.
    4. If ezShareCPAP is already listed and enabled then remove it by selecting it and then clicking the '**-**' button, then re-add and enable it (as per 3.). 
 ![image](https://github.com/user-attachments/assets/1bca6df9-86c6-4bf0-9b41-74687e1a5d5c)
-
-
