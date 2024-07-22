@@ -1,4 +1,3 @@
-# ui_main.py
 from PySide6 import QtCore, QtGui, QtWidgets
 import sys
 import os
@@ -32,27 +31,22 @@ class Ui_ezShareCPAP(object):
         self.pathLabel.setObjectName("pathLabel")
         self.pathLayout.addWidget(self.pathLabel)
         
-        self.pathField = QtWidgets.QLabel(self.centralwidget)
+        self.pathField = QtWidgets.QTextEdit(self.centralwidget)  # QTextEdit for the path
+        self.pathField.setObjectName("pathFieldTextEdit")  # Set object name for specific styling
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.pathField.sizePolicy().hasHeightForWidth())
         self.pathField.setSizePolicy(sizePolicy)
         self.pathField.setMinimumHeight(35)
+        self.pathField.setMaximumHeight(35)  # Limit the height to match QLineEdit
+        self.pathField.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)  # Disable vertical scrollbar
+        self.pathField.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)  # Disable horizontal scrollbar
         font = QtGui.QFont()
         font.setFamily("Andale Mono")
         font.setPointSize(14)
         self.pathField.setFont(font)
-        self.pathField.setStyleSheet("""
-            QLabel {
-                border: 1px solid #d1d1d1;
-                padding: 5px;
-                border-radius: 8px;
-                background-color: white;
-            }
-        """)
-        self.pathField.setObjectName("pathField")
-        self.pathField.setWordWrap(True)  # Enable word wrap
+        self.pathField.setReadOnly(True)  # Make it read-only
         self.pathLayout.addWidget(self.pathField)
         
         self.pathBrowseBtn = QtWidgets.QPushButton(self.centralwidget)

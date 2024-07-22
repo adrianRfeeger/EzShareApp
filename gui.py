@@ -1,4 +1,3 @@
-# gui.py
 from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QProgressBar
 from PySide6.QtCore import QTimer, QSize, QPoint
 import os
@@ -147,15 +146,7 @@ class ezShareCPAP(QMainWindow):
         return full_path
 
     def update_path_label(self, path):
-        self.ui.pathField.setText(path)
-        self.ui.pathField.setStyleSheet("""
-            QLabel {
-                border: 1px solid #d1d1d1;
-                padding: 5px;
-                border-radius: 4px;
-                background-color: white;
-            }
-        """)
+        self.ui.pathField.setPlainText(path)
 
     def open_path_location(self, event):
         path = self.config['Settings']['path']
