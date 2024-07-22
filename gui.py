@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QProgressBar
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QProgressBar, QTextEdit
 from PySide6.QtCore import QTimer, QSize, QPoint
 import os
 import pathlib
@@ -23,6 +23,7 @@ class ezShareCPAP(QMainWindow):
         self.load_config()  # Load the configuration
         self.request_permissions()
         self.check_oscar_installation(on_launch=True)  # Check for OSCAR installation on launch
+        QTimer.singleShot(100, self.adjust_height)  # Adjust height after everything is set up with a delay
 
     def init_config(self):
         if not os.path.exists(self.config_file):
@@ -129,6 +130,12 @@ class ezShareCPAP(QMainWindow):
 
     def load_config(self):
         self.config.read(self.config_file)
+        self.update_path_label(self.config['Settings'].get('path', '~/Documents/CPAP_Data/SD_card'))
+        self.ui.urlEntry.setText(self.config['Settings'].get('url', 'http://192.168.4.1/dir?dir=A:'))
+        self.ui.ssidEntry.setText(self.config['WiFi'].get('ssid', 'ez Share'))
+        self.ui.pskEntry.setText(self.config['WiFi'].get('psk', '88888888'))
+        self.ui.quitCheckbox.setChecked(self.config['Settings'].getboolean('quit_after_completion', False))
+        self.adjust_height()  # Adjust height after loading config
 
     def save_config(self):
         self.config['Settings']['import_oscar'] = str(self.ui.importOscarCheckbox.isChecked())
