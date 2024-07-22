@@ -39,14 +39,13 @@ class Ui_ezShareCPAP(object):
         sizePolicy.setHeightForWidth(self.pathField.sizePolicy().hasHeightForWidth())
         self.pathField.setSizePolicy(sizePolicy)
         self.pathField.setMinimumHeight(35)
-        self.pathField.setMaximumHeight(35)  # Limit the height to match QLineEdit
         self.pathField.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)  # Disable vertical scrollbar
-        self.pathField.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)  # Disable horizontal scrollbar
         font = QtGui.QFont()
         font.setFamily("Andale Mono")
         font.setPointSize(14)
         self.pathField.setFont(font)
         self.pathField.setReadOnly(True)  # Make it read-only
+        self.pathField.setWordWrapMode(QtGui.QTextOption.WordWrap)  # Enable word wrap
         self.pathLayout.addWidget(self.pathField)
         
         self.pathBrowseBtn = QtWidgets.QPushButton(self.centralwidget)
@@ -370,3 +369,12 @@ class Ui_ezShareCPAP(object):
         self.cancelBtn.setIcon(QtGui.QIcon(resource_path("icons/cancel.png")))
         self.quitBtn.setIcon(QtGui.QIcon(resource_path("icons/quit.png")))
         self.ezShareConfigBtn.setIcon(QtGui.QIcon(resource_path("icons/wifi.png")))
+
+        # Connect the textChanged signal to the adjust_height method
+        self.pathField.textChanged.connect(self.adjust_height)
+
+    def adjust_height(self):
+        document = self.pathField.document()
+        document.setTextWidth(self.pathField.viewport().width())
+        height = document.size().height()
+        self.pathField.setFixedHeight(height + 10)  # Add some padding

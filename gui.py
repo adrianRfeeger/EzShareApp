@@ -17,11 +17,58 @@ class ezShareCPAP(QMainWindow):
         super().__init__()
         self.config_file = resource_path('config.ini')
         self.config = configparser.ConfigParser()
-        self.load_config()
         self.worker = None  # Initialize worker to None
-        self.initUI()
+        self.init_config()  # Initialize configuration with defaults if necessary
+        self.initUI()  # Initialize UI
+        self.load_config()  # Load the configuration
         self.request_permissions()
         self.check_oscar_installation(on_launch=True)  # Check for OSCAR installation on launch
+
+    def init_config(self):
+        if not os.path.exists(self.config_file):
+            self.config['Settings'] = {
+                'path': '~/Documents/CPAP_Data/SD_card',
+                'url': 'http://192.168.4.1/dir?dir=A:',
+                'accessibility_checked': 'False',
+                'accessibility_prompt_disabled': 'False',
+                'import_oscar': 'False',
+                'quit_after_completion': 'False'
+            }
+            self.config['WiFi'] = {
+                'ssid': 'ez Share',
+                'psk': '88888888'
+            }
+            self.config['Window'] = {
+                'width': '800',
+                'height': '600',
+                'x': '100',
+                'y': '100'
+            }
+            with open(self.config_file, 'w') as configfile:
+                self.config.write(configfile)
+        else:
+            self.config.read(self.config_file)
+            if 'Settings' not in self.config:
+                self.config['Settings'] = {
+                    'path': '~/Documents/CPAP_Data/SD_card',
+                    'url': 'http://192.168.4.1/dir?dir=A:',
+                    'accessibility_checked': 'False',
+                    'accessibility_prompt_disabled': 'False',
+                    'import_oscar': 'False',
+                    'quit_after_completion': 'False'
+                }
+            if 'WiFi' not in self.config:
+                self.config['WiFi'] = {
+                    'ssid': 'ez Share',
+                    'psk': '88888888'
+                }
+            if 'Window' not in self.config:
+                self.config['Window'] = {
+                    'width': '800',
+                    'height': '600',
+                    'x': '100',
+                    'y': '100'
+                }
 
     def initUI(self):
         self.ui = Ui_ezShareCPAP()
@@ -67,6 +114,7 @@ class ezShareCPAP(QMainWindow):
         self.is_running = False  # Track the status of the download process
 
         self.apply_stylesheet()
+        self.adjust_height()  # Adjust height on first opening
 
         self.dark_mode_timer = QTimer(self)
         self.dark_mode_timer.timeout.connect(self.apply_stylesheet)
@@ -80,35 +128,7 @@ class ezShareCPAP(QMainWindow):
         self.setStyleSheet(stylesheet)
 
     def load_config(self):
-        if not os.path.exists(self.config_file):
-            self.config['Settings'] = {
-                'path': '~/Documents/CPAP_Data/SD_card',
-                'url': 'http://192.168.4.1/dir?dir=A:',
-                'accessibility_checked': 'False',
-                'accessibility_prompt_disabled': 'False',
-                'import_oscar': 'False',
-                'quit_after_completion': 'False'
-            }
-            self.config['WiFi'] = {
-                'ssid': 'ez Share',
-                'psk': '88888888'
-            }
-            self.config['Window'] = {
-                'width': '800',
-                'height': '600',
-                'x': '100',
-                'y': '100'
-            }
-            with open(self.config_file, 'w') as configfile:
-                self.config.write(configfile)
         self.config.read(self.config_file)
-        if 'Window' not in self.config:
-            self.config['Window'] = {
-                'width': '560',
-                'height': '414',
-                'x': '100',
-                'y': '100'
-            }
 
     def save_config(self):
         self.config['Settings']['import_oscar'] = str(self.ui.importOscarCheckbox.isChecked())
@@ -138,6 +158,7 @@ class ezShareCPAP(QMainWindow):
             short_path = self.convert_to_short_path(directory)
             self.config['Settings']['path'] = short_path
             self.update_path_label(short_path)
+            self.adjust_height()  # Adjust height after browsing path
 
     def convert_to_short_path(self, full_path):
         home_dir = str(pathlib.Path.home())
@@ -147,9 +168,10 @@ class ezShareCPAP(QMainWindow):
 
     def update_path_label(self, path):
         self.ui.pathField.setPlainText(path)
+        self.adjust_height()
 
     def open_path_location(self, event):
-        path = self.config['Settings']['path']
+        path = self.config['Settings'].get('path', '~/Documents/CPAP_Data/SD_card')
         expanded_path = pathlib.Path(path).expanduser()
         if expanded_path.is_dir():
             subprocess.run(['open', expanded_path])  # Use 'open' command to open the directory on macOS
@@ -357,6 +379,7 @@ class ezShareCPAP(QMainWindow):
         self.ui.pskEntry.setText(self.config['WiFi'].get('psk'))
         self.ui.importOscarCheckbox.setChecked(False)
         self.ui.quitCheckbox.setChecked(False)
+        self.adjust_height()  # Adjust height after restoring defaults
         self.update_status('Settings have been restored to defaults.', 'info')
 
     def update_checkboxes(self):
@@ -412,3 +435,9 @@ class ezShareCPAP(QMainWindow):
         self.ui.ezShareConfigBtn.setEnabled(True)
         self.ui.menuSettings.setEnabled(True)
         self.ui.menuTools.setEnabled(True)
+
+    def adjust_height(self):
+        document = self.ui.pathField.document()
+        document.setTextWidth(self.ui.pathField.viewport().width())
+        height = document.size().height()
+        self.ui.pathField.setFixedHeight(height + 10)  # Add some padding
