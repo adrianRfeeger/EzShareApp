@@ -1,4 +1,5 @@
-from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QProgressBar, QLabel
+# gui.py
+from PySide6.QtWidgets import QMainWindow, QFileDialog, QMessageBox, QProgressBar
 from PySide6.QtCore import QTimer, QSize, QPoint
 import os
 import pathlib
@@ -45,9 +46,6 @@ class ezShareCPAP(QMainWindow):
         self.ui.cancelBtn.clicked.connect(self.cancel_process)
         self.ui.quitBtn.clicked.connect(self.close_event_handler)
         self.ui.ezShareConfigBtn.clicked.connect(self.ez_share_config)  # Connect ez Share Config button
-
-        # Ensure the text for ezShareConfigBtn is properly set
-        self.ui.ezShareConfigBtn.setText("ez Share Config")
 
         # Connect menu actions
         self.ui.actionLoad_Default.triggered.connect(self.restore_defaults)
@@ -107,8 +105,8 @@ class ezShareCPAP(QMainWindow):
         self.config.read(self.config_file)
         if 'Window' not in self.config:
             self.config['Window'] = {
-                'width': '800',
-                'height': '600',
+                'width': '560',
+                'height': '414',
                 'x': '100',
                 'y': '100'
             }

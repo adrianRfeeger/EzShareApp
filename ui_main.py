@@ -1,9 +1,18 @@
+# ui_main.py
 from PySide6 import QtCore, QtGui, QtWidgets
+import sys
+import os
+
+def resource_path(relative_path):
+    """ Get the absolute path to a resource, works for dev and for PyInstaller """
+    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base_path, relative_path)
 
 class Ui_ezShareCPAP(object):
     def setupUi(self, ezShareCPAP):
         ezShareCPAP.setObjectName("ezShareCPAP")
         ezShareCPAP.resize(634, 387)
+        ezShareCPAP.setWindowIcon(QtGui.QIcon(resource_path("icons/main.png")))  # Set window icon
         self.centralwidget = QtWidgets.QWidget(ezShareCPAP)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
@@ -338,22 +347,32 @@ class Ui_ezShareCPAP(object):
         _translate = QtCore.QCoreApplication.translate
         ezShareCPAP.setWindowTitle(_translate("ezShareCPAP", "ezShareCPAP"))
         self.pathLabel.setText(_translate("ezShareCPAP", "Path:"))
-        self.pathBrowseBtn.setText(_translate("ezShareCPAP", "Browse"))
+        self.pathBrowseBtn.setText(_translate("ezShareCPAP", " Browse"))
         self.urlLabel.setText(_translate("ezShareCPAP", "URL: "))
         self.ssidLabel.setText(_translate("ezShareCPAP", "WiFi SSID:"))
         self.pskLabel.setText(_translate("ezShareCPAP", "WiFi PSK: "))
-        self.importOscarCheckbox.setText(_translate("ezShareCPAP", "Import with OSCAR"))
-        self.quitCheckbox.setText(_translate("ezShareCPAP", "Quit"))
+        self.ezShareConfigBtn.setText(_translate("ezShareCPAP", " ez Share Config"))
+        self.importOscarCheckbox.setText(_translate("ezShareCPAP", " Import with OSCAR"))
+        self.quitCheckbox.setText(_translate("ezShareCPAP", " Quit"))
         self.completionGroupBox.setTitle(_translate("ezShareCPAP", "On Completion:"))
         self.settingsGroupBox.setTitle(_translate("ezShareCPAP", "Settings:"))
-        self.startBtn.setText(_translate("ezShareCPAP", "Start"))
-        self.saveBtn.setText(_translate("ezShareCPAP", "Save"))
-        self.defaultBtn.setText(_translate("ezShareCPAP", "Defaults"))
-        self.cancelBtn.setText(_translate("ezShareCPAP", "Cancel"))
-        self.quitBtn.setText(_translate("ezShareCPAP", "Quit"))
+        self.startBtn.setText(_translate("ezShareCPAP", " Start"))
+        self.saveBtn.setText(_translate("ezShareCPAP", " Save"))
+        self.defaultBtn.setText(_translate("ezShareCPAP", " Defaults"))
+        self.cancelBtn.setText(_translate("ezShareCPAP", " Cancel"))
+        self.quitBtn.setText(_translate("ezShareCPAP", " Quit"))
         self.actionLoad_Default.setText(_translate("ezShareCPAP", "Load Default"))
         self.actionChange_Path.setText(_translate("ezShareCPAP", "Change Path"))
         self.actionSave_Settings.setText(_translate("ezShareCPAP", "Save"))
         self.actionEz_Share_Config.setText(_translate("ezShareCPAP", "ez Share Config"))
         self.actionCheck_Access_Oscar.setText(_translate("ezShareCPAP", "Check Access To Oscar"))
         self.actionQuit.setText(_translate("ezShareCPAP", "Quit"))
+
+        # Set icons for buttons
+        self.pathBrowseBtn.setIcon(QtGui.QIcon(resource_path("icons/browse.png")))
+        self.startBtn.setIcon(QtGui.QIcon(resource_path("icons/start.png")))
+        self.saveBtn.setIcon(QtGui.QIcon(resource_path("icons/save.png")))
+        self.defaultBtn.setIcon(QtGui.QIcon(resource_path("icons/defaults.png")))
+        self.cancelBtn.setIcon(QtGui.QIcon(resource_path("icons/cancel.png")))
+        self.quitBtn.setIcon(QtGui.QIcon(resource_path("icons/quit.png")))
+        self.ezShareConfigBtn.setIcon(QtGui.QIcon(resource_path("icons/wifi.png")))

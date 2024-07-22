@@ -7,6 +7,7 @@ a = Analysis(
     pathex=['.'],
     binaries=[],
     datas=[
+        ('icons', 'icons'),
         ('icon.icns', '.'), 
         ('config.ini', '.'),
         ('style_light.qss', '.'),
