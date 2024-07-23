@@ -25,13 +25,13 @@ QPushButton:pressed {
 }
 
 QPushButton:disabled {
-    background-color: #d0d0d0;
+    background-color: #529df9;
     color: #a0a0a0;
 }
 
 /* QLineEdit and QTextEdit styles */
 QLineEdit, QTextEdit {
-    background-color: #ffffff;
+    background-color: #f2f2f2;
     color: #000000;
     border: 1px solid #d0d0d0;
     border-radius: 4px;
@@ -49,6 +49,8 @@ QGroupBox {
     border: 1px solid #d0d0d0;
     border-radius: 4px;
     margin-top: 10px;
+    background-color: #f2f2f2;
+
 }
 
 QGroupBox::title {
@@ -64,7 +66,7 @@ QCheckBox {
 
 /* QStatusBar styles */
 QStatusBar {
-    background-color: #d0d0d0;
+    background-color: #f2f2f2;
     color: #000000;
 }
 

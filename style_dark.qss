@@ -49,6 +49,8 @@ QGroupBox {
     border: 1px solid #3e3e3e;
     border-radius: 4px;
     margin-top: 10px;
+    background-color: #424242;
+
 }
 
 QGroupBox::title {
