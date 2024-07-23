@@ -18,6 +18,7 @@ class ezShareCPAP(QMainWindow):
         self.config_file = resource_path('config.ini')
         self.config = configparser.ConfigParser()
         self.worker = None  # Initialize worker to None
+        self.ezshare = ezShare()  # Initialize ezShare instance
         self.init_config()  # Initialize configuration with defaults if necessary
         self.initUI()  # Initialize UI
         self.load_config()  # Load the configuration
@@ -93,6 +94,7 @@ class ezShareCPAP(QMainWindow):
         self.ui.cancelBtn.clicked.connect(self.cancel_process)
         self.ui.quitBtn.clicked.connect(self.close_event_handler)
         self.ui.ezShareConfigBtn.clicked.connect(self.ez_share_config)  # Connect ez Share Config button
+        print("ezShareConfigBtn connected")
 
         # Connect menu actions
         self.ui.actionLoad_Default.triggered.connect(self.restore_defaults)
@@ -165,7 +167,6 @@ class ezShareCPAP(QMainWindow):
             short_path = self.convert_to_short_path(directory)
             self.config['Settings']['path'] = short_path
             self.update_path_label(short_path)
-            self.adjust_height()  # Adjust height after browsing path
 
     def convert_to_short_path(self, full_path):
         home_dir = str(pathlib.Path.home())
@@ -178,7 +179,7 @@ class ezShareCPAP(QMainWindow):
         self.adjust_height()
 
     def open_path_location(self, event):
-        path = self.config['Settings'].get('path', '~/Documents/CPAP_Data/SD_card')
+        path = self.config['Settings']['path']
         expanded_path = pathlib.Path(path).expanduser()
         if expanded_path.is_dir():
             subprocess.run(['open', expanded_path])  # Use 'open' command to open the directory on macOS
@@ -212,7 +213,6 @@ class ezShareCPAP(QMainWindow):
         self.config['Settings']['import_oscar'] = str(self.ui.importOscarCheckbox.isChecked())
         self.config['Settings']['quit_after_completion'] = str(self.ui.quitCheckbox.isChecked())
 
-        self.ezshare = ezShare()
         self.ezshare.set_params(
             path=expanded_path,
             url=url,
@@ -303,6 +303,7 @@ class ezShareCPAP(QMainWindow):
         self.close()
 
     def ez_share_config(self):
+        print("ez_share_config method called")
         msg = QMessageBox()
         msg.setIcon(QMessageBox.Icon.Information)
         msg.setWindowTitle('ez Share Config')
@@ -314,6 +315,7 @@ class ezShareCPAP(QMainWindow):
         if ret == QMessageBox.StandardButton.Ok:
             msg.close()
             self.update_status('Starting configuration process...', 'info')
+            print("Starting configuration process...")
             try:
                 self.update_status(f'Connecting to {self.ui.ssidEntry.text()}...', 'info')
                 self.ezshare.set_params(
@@ -339,6 +341,7 @@ class ezShareCPAP(QMainWindow):
                 if wifi_connected(self.ezshare):
                     self.update_status(f'Connected to {self.ui.ssidEntry.text()}.', 'info')
                     self.update_status('Checking if the ez Share HTTP server is reachable...', 'info')
+                    print("Connected to Wi-Fi, checking HTTP server")
                     try:
                         response = requests.get('http://192.168.4.1/publicdir/index.htm?vtype=0&fdir=&ftype=1&devw=320&devh=356', timeout=5)
                         if response.status_code == 200:
@@ -386,7 +389,6 @@ class ezShareCPAP(QMainWindow):
         self.ui.pskEntry.setText(self.config['WiFi'].get('psk'))
         self.ui.importOscarCheckbox.setChecked(False)
         self.ui.quitCheckbox.setChecked(False)
-        self.adjust_height()  # Adjust height after restoring defaults
         self.update_status('Settings have been restored to defaults.', 'info')
 
     def update_checkboxes(self):
@@ -446,5 +448,5 @@ class ezShareCPAP(QMainWindow):
     def adjust_height(self):
         document = self.ui.pathField.document()
         document.setTextWidth(self.ui.pathField.viewport().width())
-        height = document.size().height()
-        self.ui.pathField.setFixedHeight(height + 10)  # Add some padding
+        height = document.size().height() + 10
+        self.ui.pathField.setFixedHeight(height)
