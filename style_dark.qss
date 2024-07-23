@@ -46,10 +46,11 @@ QLabel {
 
 /* QGroupBox styles */
 QGroupBox {
-    border: 1px solid #3e3e3e;
     border-radius: 4px;
     margin-top: 10px;
     background-color: #424242;
+    border: 1px solid #5e5e5e;
+
 
 }
 
@@ -68,6 +69,8 @@ QCheckBox {
 QStatusBar {
     background-color: #3e3e3e;
     color: #f0f0f0;
+    border: 1px solid #5e5e5e;
+
 }
 
 /* QMenuBar styles */

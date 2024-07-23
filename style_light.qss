@@ -68,6 +68,7 @@ QCheckBox {
 QStatusBar {
     background-color: #f2f2f2;
     color: #000000;
+    border: 1px solid #e0e0e0;
 }
 
 /* QMenuBar styles */
