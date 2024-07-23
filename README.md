@@ -27,7 +27,7 @@ ezShareCPAP is a macOS program designed to download files from an [ez Share SD c
 
 1. **Download the release version:**
 
-   - Download the release version compiled by PyInstaller from [here](https://github.com/adrianrfeeger/ezShareCPAP/releases).
+   - Download the release version compiled with PyInstaller from [here](https://github.com/adrianrfeeger/ezShareCPAP/releases).
 
 2. **Extract the ZIP file:**
 
