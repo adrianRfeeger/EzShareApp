@@ -13,25 +13,25 @@ QWidget#centralwidget, QLabel, QTextEdit, QLineEdit, QPushButton, QCheckBox {
 
 /* QPushButton styles */
 QPushButton {
-    background-color: #2481f6;
-    color: #ffffff;
-    border: 1px solid #e0e0e0;
+    background-color: rgba(59, 89, 152, 0.8);
+    color: #e0e0e0;
+    border: 1px solid #444444;
     border-radius: 4px;
     padding: 6px;
     font-size: 14px;
 }
 
 QPushButton:hover {
-    background-color: #5ba1e6;
+    background-color: rgba(76, 110, 179, 0.8);
 }
 
 QPushButton:pressed {
-    background-color: #2c7bbf;
+    background-color: rgba(44, 62, 112, 0.8);
 }
 
 QPushButton:disabled {
-    background-color: #529df9;
-    color: #a0a0a0;
+    background-color: rgba(59, 89, 152, 0.8);
+    color: #6c6c6c;
 }
 
 /* QLineEdit and QTextEdit styles */
