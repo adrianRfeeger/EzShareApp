@@ -34,7 +34,8 @@ exe = EXE(
     strip=True,
     upx=True,
     console=False,
-    icon='icon.icns'
+    icon='icon.icns',
+    upx_args='--best --lzma'
 )
 
 coll = COLLECT(
@@ -43,7 +44,8 @@ coll = COLLECT(
     a.datas,
     strip=True,
     upx=True,
-    name='ezShareCPAP'
+    name='ezShareCPAP',
+    upx_args='--best --lzma'
 )
 
 app = BUNDLE(

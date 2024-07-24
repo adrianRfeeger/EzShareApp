@@ -10,17 +10,17 @@ def resource_path(relative_path):
 class Ui_ezShareCPAP(object):
     def setupUi(self, ezShareCPAP):
         ezShareCPAP.setObjectName("ezShareCPAP")
-        ezShareCPAP.resize(634, 387)
         ezShareCPAP.setWindowIcon(QtGui.QIcon(resource_path("icons/main.png")))  # Set window icon
         self.centralwidget = QtWidgets.QWidget(ezShareCPAP)
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.verticalLayout.setSpacing(10)  # Set uniform vertical spacing
+        self.verticalLayout.setSpacing(8)  # Set uniform vertical spacing
 
         self.pathLayout = QtWidgets.QHBoxLayout()
         self.pathLayout.setObjectName("pathLayout")
         self.pathLayout.setSpacing(10)  # Set uniform horizontal spacing
+
         self.pathLabel = QtWidgets.QLabel(self.centralwidget)
         font = QtGui.QFont()
         font.setFamily("Geneva")
@@ -219,6 +219,7 @@ class Ui_ezShareCPAP(object):
         self.settingsGroupBox.setObjectName("settingsGroupBox")
         self.settingsLayout = QtWidgets.QVBoxLayout(self.settingsGroupBox)
         self.settingsLayout.setObjectName("settingsLayout")
+        self.settingsGroupBox.setFixedHeight(100)
         
         self.saveBtn = QtWidgets.QPushButton(self.settingsGroupBox)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
@@ -372,7 +373,10 @@ class Ui_ezShareCPAP(object):
 
         # Connect the textChanged signal to the adjust_height method
         self.pathField.textChanged.connect(self.adjust_height)
-
+        
+        # Shrink the window to fit fidgets tightly
+        min_size_hint = self.centralwidget.minimumSizeHint() - QtCore.QSize(100, 100)
+        ezShareCPAP.setMinimumSize(min_size_hint)
     def adjust_height(self):
         document = self.pathField.document()
         document.setTextWidth(self.pathField.viewport().width())
