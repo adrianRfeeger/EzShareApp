@@ -11,7 +11,8 @@ a = Analysis(
         ('icon.icns', '.'), 
         ('config.ini', '.'),
         ('style_light.qss', '.'),
-        ('style_dark.qss', '.')
+        ('style_dark.qss', '.'),
+        ('background.png', '.')
         ],
     hiddenimports=[],
     hookspath=[],

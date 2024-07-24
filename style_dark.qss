@@ -6,17 +6,6 @@ QWidget {
     font-size: 14px;
 }
 
-/* Main window background image */
-QWidget#ezShareCPAP {
-    border-image: url('background.png');
-    
-    background-position: center;
-    background-repeat: no-repeat;
-    background-clip: border-box;
-    background-origin: padding-box;
-    background-attachment: fixed; /* Fix the background image relative to the viewport */
-}
-
 /* Central widget and child elements transparency */
 QWidget#centralwidget, QLabel, QTextEdit, QLineEdit, QPushButton, QCheckBox {
     background: rgba(44, 44, 44, 0.8); /* Slightly transparent background */

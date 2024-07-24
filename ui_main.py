@@ -16,6 +16,18 @@ class Ui_ezShareCPAP(object):
         self.verticalLayout = QtWidgets.QVBoxLayout(self.centralwidget)
         self.verticalLayout.setObjectName("verticalLayout")
         self.verticalLayout.setSpacing(8)  # Set uniform vertical spacing
+   
+        # Apply stylesheet using background properties
+        background_path = resource_path("background.png")
+        self.centralwidget.setStyleSheet(f"""
+        QWidget#centralwidget {{
+            border-image: url({background_path}) 0 0 0 0 stretch stretch;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-clip: border-box;
+            background-origin: padding-box;
+        }}
+        """)
 
         self.pathLayout = QtWidgets.QHBoxLayout()
         self.pathLayout.setObjectName("pathLayout")
@@ -167,6 +179,7 @@ class Ui_ezShareCPAP(object):
         font = QtGui.QFont()
         font.setFamily("Geneva")
         font.setPointSize(14)
+        self.completionGroupBox.setFixedHeight(100)
         self.completionGroupBox.setFont(font)
         self.completionGroupBox.setObjectName("completionGroupBox")
         self.completionLayout = QtWidgets.QVBoxLayout(self.completionGroupBox)
@@ -217,9 +230,9 @@ class Ui_ezShareCPAP(object):
         font.setPointSize(14)
         self.settingsGroupBox.setFont(font)
         self.settingsGroupBox.setObjectName("settingsGroupBox")
+        self.settingsGroupBox.setFixedHeight(100)
         self.settingsLayout = QtWidgets.QVBoxLayout(self.settingsGroupBox)
         self.settingsLayout.setObjectName("settingsLayout")
-        self.settingsGroupBox.setFixedHeight(100)
         
         self.saveBtn = QtWidgets.QPushButton(self.settingsGroupBox)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
@@ -375,7 +388,7 @@ class Ui_ezShareCPAP(object):
         self.pathField.textChanged.connect(self.adjust_height)
         
         # Shrink the window to fit fidgets tightly
-        min_size_hint = self.centralwidget.minimumSizeHint() - QtCore.QSize(100, 100)
+        min_size_hint = self.centralwidget.minimumSizeHint() 
         ezShareCPAP.setMinimumSize(min_size_hint)
     def adjust_height(self):
         document = self.pathField.document()

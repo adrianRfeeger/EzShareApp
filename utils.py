@@ -3,6 +3,16 @@ import subprocess
 import sys
 from PySide6.QtWidgets import QFileDialog, QMessageBox
 
+
+def resource_path(relative_path):
+    """ Get the absolute path to a resource, works for dev and for PyInstaller """
+    try:
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    
+    return os.path.join(base_path, relative_path)
+    
 def is_dark_mode():
     try:
         result = subprocess.run(
@@ -16,11 +26,6 @@ def load_stylesheet(file_name):
     file_path = resource_path(file_name)
     with open(file_path, "r") as file:
         return file.read()
-
-def resource_path(relative_path):
-    """ Get the absolute path to a resource, works for dev and for PyInstaller """
-    base_path = getattr(sys, '_MEIPASS', os.path.dirname(os.path.abspath(__file__)))
-    return os.path.join(base_path, relative_path)
 
 def ensure_disk_access(directory, parent):
     expanded_directory = os.path.expanduser(directory)
