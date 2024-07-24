@@ -21,7 +21,7 @@ class Ui_ezShareCPAP(object):
         background_path = resource_path("background.png")
         self.centralwidget.setStyleSheet(f"""
         QWidget#centralwidget {{
-            border-image: url({background_path}) 0 0 0 0 stretch stretch;
+            border-image: url({background_path});
             background-repeat: no-repeat;
             background-position: center;
             background-clip: border-box;
@@ -179,7 +179,7 @@ class Ui_ezShareCPAP(object):
         font = QtGui.QFont()
         font.setFamily("Geneva")
         font.setPointSize(14)
-        self.completionGroupBox.setFixedHeight(100)
+        self.completionGroupBox.setFixedHeight(110)
         self.completionGroupBox.setFont(font)
         self.completionGroupBox.setObjectName("completionGroupBox")
         self.completionLayout = QtWidgets.QVBoxLayout(self.completionGroupBox)
@@ -230,7 +230,7 @@ class Ui_ezShareCPAP(object):
         font.setPointSize(14)
         self.settingsGroupBox.setFont(font)
         self.settingsGroupBox.setObjectName("settingsGroupBox")
-        self.settingsGroupBox.setFixedHeight(100)
+        self.settingsGroupBox.setFixedHeight(110)
         self.settingsLayout = QtWidgets.QVBoxLayout(self.settingsGroupBox)
         self.settingsLayout.setObjectName("settingsLayout")
         
