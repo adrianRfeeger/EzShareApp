@@ -1,5 +1,5 @@
 # ezShareCPAP
-![image](https://github.com/user-attachments/assets/bfa810b6-4b75-4f32-8859-ec6af5951aa6)
+![image](https://github.com/user-attachments/assets/74cd5ca0-f201-4d0f-a935-28eacd6151b8)
 
 ## Overview
 
